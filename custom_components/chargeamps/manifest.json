@@ -1,0 +1,16 @@
+{
+	"domain": "chargeamps",
+	"name": "Chargeamps",
+	"documentation": "https://github.com/kirei/hass-chargeamps",
+	"dependencies": [
+
+	],
+	"config_flow": false,
+	"codeowners": [
+		"@jschlyter"
+	],
+	"requirements": [
+		"chargeamps==1.1.0"
+	],
+	"homeassistant": "0.103.0"
+}

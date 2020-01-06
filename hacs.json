@@ -1,0 +1,6 @@
+{
+  "name": "Chargeamps",
+  "domains": ["sensor", "binary_sensor", "switch"],
+  "iot_class": "cloud_polling",
+  "render_readme": false
+}
