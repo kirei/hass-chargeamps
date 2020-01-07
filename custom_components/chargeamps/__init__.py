@@ -138,13 +138,13 @@ class ChargeampsHandler:
         settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.mode = mode
         _LOGGER.info("Setting chargepoint connector: %s", settings)
-        self.client.set_chargepoint_connector_settings(settings)
+        await self.client.set_chargepoint_connector_settings(settings)
 
     async def set_connector_max_current(self, charge_point_id, connector_id, max_current):
         settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.max_current = max_current
         _LOGGER.info("Setting chargepoint connector: %s", settings)
-        self.client.set_chargepoint_connector_settings(settings)
+        await self.client.set_chargepoint_connector_settings(settings)
 
     async def update_info(self):
         for cp in await self.client.get_chargepoints():

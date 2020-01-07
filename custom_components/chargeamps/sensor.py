@@ -31,7 +31,6 @@ class ChargeampsSensor(Entity):
         self.charge_point_id = charge_point_id
         self.connector_id = connector_id
         self.handler = self.hass.data[DOMAIN_DATA]["handler"]
-
         self._name = name
         self._icon = ICON
         self._state = None
