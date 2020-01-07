@@ -15,7 +15,7 @@ async def async_setup_platform(
     """Setup sensor platform."""
     sensors = []
     handler = hass.data[DOMAIN_DATA]["handler"]
-    for cp_id in handler.chargepoint_ids:
+    for cp_id in handler.charge_point_ids:
         cp = handler.get_chargepoint_info(cp_id)
         for connector in cp.connectors:
             sensors.append(ChargeampsSensor(hass, cp.name, connector.charge_point_id, connector.connector_id))
