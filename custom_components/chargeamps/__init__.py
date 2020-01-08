@@ -19,7 +19,7 @@ from homeassistant.const import (CONF_API_KEY, CONF_PASSWORD, CONF_URL,
 from homeassistant.helpers import discovery
 from homeassistant.util import Throttle
 
-from .const import CONF_CHARGEPOINTS, DOMAIN, DOMAIN_DATA, PLATFORMS
+from .const import CONF_CHARGEPOINTS, CONF_READONLY, DOMAIN, DOMAIN_DATA, PLATFORMS
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
 
@@ -33,6 +33,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_PASSWORD): cv.string,
                 vol.Required(CONF_API_KEY): cv.string,
                 vol.Optional(CONF_URL): cv.url,
+                vol.Optional(CONF_READONLY): cv.boolean,
                 vol.Optional(CONF_CHARGEPOINTS): vol.All(cv.ensure_list, [cv.string]),
             }
         )
@@ -62,6 +63,7 @@ async def async_setup(hass, config):
     api_key = config[DOMAIN].get(CONF_API_KEY)
     api_base_url = config[DOMAIN].get(CONF_URL)
     charge_point_ids = config[DOMAIN].get(CONF_CHARGEPOINTS)
+    readonly = config[DOMAIN].get(CONF_READONLY, False)
 
     # Configure the client.
     client = ChargeAmpsExternalClient(email=username,
@@ -86,7 +88,7 @@ async def async_setup(hass, config):
             _LOGGER.info("Discovered chargepoint %s", cp.id)
             charge_point_ids.append(cp.id)
 
-    handler = ChargeampsHandler(hass, client, charge_point_ids)
+    handler = ChargeampsHandler(hass, client, charge_point_ids, readonly)
     hass.data[DOMAIN_DATA]["handler"] = handler
     hass.data[DOMAIN_DATA]["info"] = {}
     hass.data[DOMAIN_DATA]["chargepoint"] = {}
@@ -114,13 +116,16 @@ async def async_setup(hass, config):
 class ChargeampsHandler:
     """This class handle communication and stores the data."""
 
-    def __init__(self, hass, client, charge_point_ids):
+    def __init__(self, hass, client, charge_point_ids, readonly):
         """Initialize the class."""
         self.hass = hass
         self.client = client
         self.charge_point_ids = charge_point_ids
         self.default_charge_point_id = charge_point_ids[0]
         self.default_connector_id = 1
+        self.readonly = readonly
+        if self.readonly:
+            _LOGGER.warning("Running in read-only mode, chargepoint will never be updated")
 
     async def get_chargepoint_statuses(self):
         res = []
@@ -137,14 +142,20 @@ class ChargeampsHandler:
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
         settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.mode = mode
-        _LOGGER.info("Setting chargepoint connector: %s", settings)
-        await self.client.set_chargepoint_connector_settings(settings)
+        if self.readonly:
+            _LOGGER.info("NOT setting chargepoint connector: %s", settings)
+        else:
+            _LOGGER.info("Setting chargepoint connector: %s", settings)
+            await self.client.set_chargepoint_connector_settings(settings)
 
     async def set_connector_max_current(self, charge_point_id, connector_id, max_current):
         settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.max_current = max_current
-        _LOGGER.info("Setting chargepoint connector: %s", settings)
-        await self.client.set_chargepoint_connector_settings(settings)
+        if self.readonly:
+            _LOGGER.info("NOT setting chargepoint connector: %s", settings)
+        else:
+            _LOGGER.info("Setting chargepoint connector: %s", settings)
+            await self.client.set_chargepoint_connector_settings(settings)
 
     async def update_info(self):
         for cp in await self.client.get_chargepoints():

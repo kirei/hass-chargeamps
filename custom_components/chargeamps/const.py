@@ -11,6 +11,7 @@ ICON = "mdi:car-connected"
 
 # Configuration
 CONF_CHARGEPOINTS = "chargepoints"
+CONF_READONLY = "readonly"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
