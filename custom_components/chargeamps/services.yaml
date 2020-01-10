@@ -1,0 +1,61 @@
+# Describes the format for available services for Chargeamps charging stations
+
+set_light:
+  description: Sets the charge point lights.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    dimmer:
+      description: >
+        Dimmer settings. Possible values are 'off', 'low', 'medium' or 'high'.
+      example: off
+    downlight:
+      description: >
+        Enable/disable downlight.
+      example: false
+
+set_max_current:
+  description: Sets the maximum current for charging processes.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1
+    max_current:
+      description: >
+        The maximum current used for the charging process in A. Allowed are
+        values between 6 A and 63 A. Invalid values are discarded and the
+        default is set to 6 A.
+      example: 16
+
+enable:
+  description: >
+    Starts a charging process if charging station is authorized.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1
+
+disable:
+  description: >
+    Stops the charging process if charging station is authorized.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1
