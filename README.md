@@ -28,6 +28,7 @@ Each Chargeamps chargepoint connector will be represented as a sensor with the c
 
 The following services are implemented by the component:
 
+- `set_light` -- set charge point lights
 - `set_max_current` -- set max current for connector
 - `enable` -- enable connector
 - `disable` -- disable connector
