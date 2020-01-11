@@ -19,7 +19,7 @@ from homeassistant.const import (CONF_API_KEY, CONF_PASSWORD, CONF_URL,
 from homeassistant.helpers import discovery
 from homeassistant.util import Throttle
 
-from .const import CONF_CHARGEPOINTS, CONF_READONLY, DOMAIN, DOMAIN_DATA, PLATFORMS
+from .const import CONF_CHARGEPOINTS, CONF_READONLY, DOMAIN, DOMAIN_DATA, PLATFORMS, DIMMER_VALUES
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
 
@@ -42,6 +42,7 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 _SERVICE_MAP = {
+    "set_light": "async_set_light",
     "set_max_current": "async_set_max_current",
     "enable": "async_enable_ev",
     "disable": "async_disable_ev",
@@ -136,6 +137,18 @@ class ChargeampsHandler:
     def get_chargepoint_info(self, charge_point_id) -> ChargePoint:
         return self.hass.data[DOMAIN_DATA]["info"].get(charge_point_id)
 
+    async def set_chargepoint_lights(self, charge_point_id, dimmer, downlight):
+        settings = await self.client.get_chargepoint_settings(charge_point_id)
+        if dimmer is not None:
+            settings.dimmer = dimmer.capitalize()
+        if downlight is not None:
+            settings.down_light = downlight
+        if self.readonly:
+            _LOGGER.info("NOT setting chargepoint: %s", settings)
+        else:
+            _LOGGER.info("Setting chargepoint: %s", settings)
+            await self.client.set_chargepoint_settings(settings)
+
     def get_connector_status(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorStatus]:
         return self.hass.data[DOMAIN_DATA]["connector"].get((charge_point_id, connector_id))
 
@@ -184,9 +197,23 @@ class ChargeampsHandler:
             max_current = param["max_current"]
         except (KeyError, ValueError) as ex:
             _LOGGER.warning("Current value is not correct. %s", ex)
+            return
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
+
+    async def async_set_light(self, param):
+        """Set charge point lights in async way."""
+        charge_point_id = param.get("chargepoint", self.default_charge_point_id)
+        dimmer = param.get('dimmer')
+        if dimmer is not None and dimmer not in DIMMER_VALUES:
+            _LOGGER.warning("Dimmer is not one of %s", DIMMER_VALUES)
+            return
+        downlight = param.get('downlight')
+        if downlight is not None and not isinstance(downlight, bool):
+            _LOGGER.warning("Downlight must be true or false")
+            return
+        await self.set_chargepoint_lights(charge_point_id, dimmer, downlight)
 
     async def async_enable_ev(self, param):
         """Enable EV in async way."""
