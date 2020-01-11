@@ -2,5 +2,5 @@
   "name": "Chargeamps",
   "domains": ["sensor"],
   "iot_class": "cloud_polling",
-  "render_readme": false
+  "render_readme": true
 }
