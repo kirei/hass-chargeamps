@@ -1,6 +1,6 @@
 # Chargeamps for Home Assistant
 
-This repository contains a Chargeamps component for [Home Assistant](https://www.home-assistant.io/).
+This repository contains a [Chargeamps](https://charge-amps.com/) component for [Home Assistant](https://www.home-assistant.io/).
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![travis_ci_badge](https://travis-ci.org/kirei/python-chargeamps.svg?branch=master)](https://travis-ci.org/kirei/python-chargeamps)
 
@@ -9,9 +9,15 @@ This repository contains a Chargeamps component for [Home Assistant](https://www
 
 Installation via HACS by adding `https://github.com/kirei/hass-chargeamps` as a custom repository or by copying `custom_components/chargeamps`.
 
+## Supported Hardware
+
+- [Charge Amps AURA](https://charge-amps.com/products/charging-stations/aura/)
+- [HALO Wallbox](https://charge-amps.com/products/charging-stations/halo-wallbox/)
+
+
 ## Configuration
 
-The component requires configuration via the configuration file. The following parameters are required:
+The component requires configuration via the Home Assistant configuration file. The following parameters are required:
 
     chargeamps:
       username: EMAIL_ADDRESS
@@ -19,6 +25,8 @@ The component requires configuration via the configuration file. The following p
       api_key: SECRET_API_KEY
 
 The default is to configure all charge points for the account. To only include some charge points a list of charge point IDs can be provided using the `chargepoints` parameter.
+
+N.B. You need an API key from [Charge Amps Support](mailto:support@charge-amps.com) to use this component.
 
 
 ## Entities
