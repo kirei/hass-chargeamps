@@ -9,16 +9,15 @@ from .const import DOMAIN, DOMAIN_DATA, ICON
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(
-    hass, config, async_add_entities, discovery_info=None
-):  # pylint: disable=unused-argument
+async def async_setup_platform(hass, config, async_add_entities,
+                               discovery_info=None):  # pylint: disable=unused-argument
     """Setup sensor platform."""
     sensors = []
     handler = hass.data[DOMAIN_DATA]["handler"]
     for cp_id in handler.charge_point_ids:
-        cp = handler.get_chargepoint_info(cp_id)
-        for connector in cp.connectors:
-            sensors.append(ChargeampsSensor(hass, cp.name, connector.charge_point_id, connector.connector_id))
+        cp_info = handler.get_chargepoint_info(cp_id)
+        for connector in cp_info.connectors:
+            sensors.append(ChargeampsSensor(hass, cp_info.name, connector.charge_point_id, connector.connector_id))
             _LOGGER.info("Adding chargepoint %s connector %s", connector.charge_point_id, connector.connector_id)
     async_add_entities(sensors, True)
 

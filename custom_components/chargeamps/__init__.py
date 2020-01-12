@@ -13,7 +13,6 @@ import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from chargeamps.base import ChargePoint, ChargePointConnectorStatus
 from chargeamps.external import ChargeAmpsExternalClient
-from homeassistant import config_entries
 from homeassistant.const import (CONF_API_KEY, CONF_PASSWORD, CONF_URL,
                                  CONF_USERNAME)
 from homeassistant.helpers import discovery
@@ -150,7 +149,8 @@ class ChargeampsHandler:
             await self.client.set_chargepoint_settings(settings)
 
     def get_connector_status(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorStatus]:
-        return self.hass.data[DOMAIN_DATA]["connector"].get((charge_point_id, connector_id))
+        key = (charge_point_id, connector_id)
+        return self.hass.data[DOMAIN_DATA]["connector"].get(key)
 
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
         settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
@@ -186,8 +186,10 @@ class ChargeampsHandler:
             _LOGGER.debug("STATUS = %s", status)
             self.hass.data[DOMAIN_DATA]["chargepoint"][charge_point_id] = status
             for connector_status in status.connector_statuses:
-                _LOGGER.debug("Update data for chargepoint %s connector %d", charge_point_id, connector_status.connector_id)
-                self.hass.data[DOMAIN_DATA]["connector"][(charge_point_id, connector_status.connector_id)] = connector_status
+                _LOGGER.debug("Update data for chargepoint %s connector %d",
+                              charge_point_id, connector_status.connector_id)
+                key = (charge_point_id, connector_status.connector_id)
+                self.hass.data[DOMAIN_DATA]["connector"][key] = connector_status
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 
