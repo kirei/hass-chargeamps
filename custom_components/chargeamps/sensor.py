@@ -9,16 +9,28 @@ from .const import DOMAIN, DOMAIN_DATA, ICON
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(hass, config, async_add_entities,
-                               discovery_info=None):  # pylint: disable=unused-argument
+async def async_setup_platform(
+    hass, config, async_add_entities, discovery_info=None
+):  # pylint: disable=unused-argument
     """Setup sensor platform."""
     sensors = []
     handler = hass.data[DOMAIN_DATA]["handler"]
     for cp_id in handler.charge_point_ids:
         cp_info = handler.get_chargepoint_info(cp_id)
         for connector in cp_info.connectors:
-            sensors.append(ChargeampsSensor(hass, cp_info.name, connector.charge_point_id, connector.connector_id))
-            _LOGGER.info("Adding chargepoint %s connector %s", connector.charge_point_id, connector.connector_id)
+            sensors.append(
+                ChargeampsSensor(
+                    hass,
+                    cp_info.name,
+                    connector.charge_point_id,
+                    connector.connector_id,
+                )
+            )
+            _LOGGER.info(
+                "Adding chargepoint %s connector %s",
+                connector.charge_point_id,
+                connector.connector_id,
+            )
     async_add_entities(sensors, True)
 
 
@@ -37,14 +49,26 @@ class ChargeampsSensor(Entity):
 
     async def async_update(self):
         """Update the sensor."""
-        _LOGGER.debug("Update chargepoint %s connector %s", self.charge_point_id, self.connector_id)
+        _LOGGER.debug(
+            "Update chargepoint %s connector %s",
+            self.charge_point_id,
+            self.connector_id,
+        )
         await self.handler.update_data(self.charge_point_id)
-        _LOGGER.debug("Finished update chargepoint %s connector %s", self.charge_point_id, self.connector_id)
-        status = self.handler.get_connector_status(self.charge_point_id, self.connector_id)
+        _LOGGER.debug(
+            "Finished update chargepoint %s connector %s",
+            self.charge_point_id,
+            self.connector_id,
+        )
+        status = self.handler.get_connector_status(
+            self.charge_point_id, self.connector_id
+        )
         if status is None:
             return
         self._state = status.status
-        self._attributes["total_consumption_kwh"] = round(status.total_consumption_kwh, 3)
+        self._attributes["total_consumption_kwh"] = round(
+            status.total_consumption_kwh, 3
+        )
 
     @property
     def name(self):

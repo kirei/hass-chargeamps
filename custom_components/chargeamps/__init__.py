@@ -11,14 +11,24 @@ from typing import Optional
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from chargeamps.base import ChargePoint, ChargePointConnectorStatus, ChargePointConnectorSettings
+from chargeamps.base import (
+    ChargePoint,
+    ChargePointConnectorStatus,
+    ChargePointConnectorSettings,
+)
 from chargeamps.external import ChargeAmpsExternalClient
-from homeassistant.const import (CONF_API_KEY, CONF_PASSWORD, CONF_URL,
-                                 CONF_USERNAME)
+from homeassistant.const import CONF_API_KEY, CONF_PASSWORD, CONF_URL, CONF_USERNAME
 from homeassistant.helpers import discovery
 from homeassistant.util import Throttle
 
-from .const import CONF_CHARGEPOINTS, CONF_READONLY, DOMAIN, DOMAIN_DATA, PLATFORMS, DIMMER_VALUES
+from .const import (
+    CONF_CHARGEPOINTS,
+    CONF_READONLY,
+    DOMAIN,
+    DOMAIN_DATA,
+    PLATFORMS,
+    DIMMER_VALUES,
+)
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
 
@@ -66,10 +76,9 @@ async def async_setup(hass, config):
     readonly = config[DOMAIN].get(CONF_READONLY, False)
 
     # Configure the client.
-    client = ChargeAmpsExternalClient(email=username,
-                                      password=password,
-                                      api_key=api_key,
-                                      api_base_url=api_base_url)
+    client = ChargeAmpsExternalClient(
+        email=username, password=password, api_key=api_key, api_base_url=api_base_url
+    )
 
     # check all configured chargepoints or discover
     if charge_point_ids is not None:
@@ -126,7 +135,9 @@ class ChargeampsHandler:
         self.default_connector_id = 1
         self.readonly = readonly
         if self.readonly:
-            _LOGGER.warning("Running in read-only mode, chargepoint will never be updated")
+            _LOGGER.warning(
+                "Running in read-only mode, chargepoint will never be updated"
+            )
 
     async def get_chargepoint_statuses(self):
         res = []
@@ -149,16 +160,22 @@ class ChargeampsHandler:
             _LOGGER.info("Setting chargepoint: %s", settings)
             await self.client.set_chargepoint_settings(settings)
 
-    def get_connector_status(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorStatus]:
+    def get_connector_status(
+        self, charge_point_id, connector_id
+    ) -> Optional[ChargePointConnectorStatus]:
         key = (charge_point_id, connector_id)
         return self.hass.data[DOMAIN_DATA]["connector_status"].get(key)
 
-    def get_connector_settings(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorSettings]:
+    def get_connector_settings(
+        self, charge_point_id, connector_id
+    ) -> Optional[ChargePointConnectorSettings]:
         key = (charge_point_id, connector_id)
         return self.hass.data[DOMAIN_DATA]["connector_settings"].get(key)
 
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
-        settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
+        settings = await self.client.get_chargepoint_connector_settings(
+            charge_point_id, connector_id
+        )
         settings.mode = mode
         if self.readonly:
             _LOGGER.info("NOT setting chargepoint connector: %s", settings)
@@ -166,8 +183,12 @@ class ChargeampsHandler:
             _LOGGER.info("Setting chargepoint connector: %s", settings)
             await self.client.set_chargepoint_connector_settings(settings)
 
-    async def set_connector_max_current(self, charge_point_id, connector_id, max_current):
-        settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
+    async def set_connector_max_current(
+        self, charge_point_id, connector_id, max_current
+    ):
+        settings = await self.client.get_chargepoint_connector_settings(
+            charge_point_id, connector_id
+        )
         settings.max_current = max_current
         if self.readonly:
             _LOGGER.info("NOT setting chargepoint connector: %s", settings)
@@ -191,12 +212,19 @@ class ChargeampsHandler:
             _LOGGER.debug("STATUS = %s", status)
             self.hass.data[DOMAIN_DATA]["chargepoint"][charge_point_id] = status
             for connector_status in status.connector_statuses:
-                _LOGGER.debug("Update data for chargepoint %s connector %d",
-                              charge_point_id, connector_status.connector_id)
+                _LOGGER.debug(
+                    "Update data for chargepoint %s connector %d",
+                    charge_point_id,
+                    connector_status.connector_id,
+                )
                 key = (charge_point_id, connector_status.connector_id)
                 self.hass.data[DOMAIN_DATA]["connector_status"][key] = connector_status
-                connector_settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_status.connector_id)
-                self.hass.data[DOMAIN_DATA]["connector_settings"][key] = connector_settings
+                connector_settings = await self.client.get_chargepoint_connector_settings(
+                    charge_point_id, connector_status.connector_id
+                )
+                self.hass.data[DOMAIN_DATA]["connector_settings"][
+                    key
+                ] = connector_settings
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 
@@ -214,11 +242,11 @@ class ChargeampsHandler:
     async def async_set_light(self, param):
         """Set charge point lights in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        dimmer = param.get('dimmer')
+        dimmer = param.get("dimmer")
         if dimmer is not None and dimmer not in DIMMER_VALUES:
             _LOGGER.warning("Dimmer is not one of %s", DIMMER_VALUES)
             return
-        downlight = param.get('downlight')
+        downlight = param.get("downlight")
         if downlight is not None and not isinstance(downlight, bool):
             _LOGGER.warning("Downlight must be true or false")
             return

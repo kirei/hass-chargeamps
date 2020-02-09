@@ -17,4 +17,4 @@ CONF_READONLY = "readonly"
 DEFAULT_NAME = DOMAIN
 
 # Possible dimmer values
-DIMMER_VALUES = ['off', 'low', 'medium', 'high']
+DIMMER_VALUES = ["off", "low", "medium", "high"]
