@@ -11,7 +11,7 @@ from typing import Optional
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from chargeamps.base import ChargePoint, ChargePointConnectorStatus
+from chargeamps.base import ChargePoint, ChargePointConnectorStatus, ChargePointConnectorSettings
 from chargeamps.external import ChargeAmpsExternalClient
 from homeassistant.const import (CONF_API_KEY, CONF_PASSWORD, CONF_URL,
                                  CONF_USERNAME)
@@ -92,7 +92,8 @@ async def async_setup(hass, config):
     hass.data[DOMAIN_DATA]["handler"] = handler
     hass.data[DOMAIN_DATA]["info"] = {}
     hass.data[DOMAIN_DATA]["chargepoint"] = {}
-    hass.data[DOMAIN_DATA]["connector"] = {}
+    hass.data[DOMAIN_DATA]["connector_status"] = {}
+    hass.data[DOMAIN_DATA]["connector_settings"] = {}
     await handler.update_info()
 
     # Register services to hass
@@ -150,7 +151,11 @@ class ChargeampsHandler:
 
     def get_connector_status(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorStatus]:
         key = (charge_point_id, connector_id)
-        return self.hass.data[DOMAIN_DATA]["connector"].get(key)
+        return self.hass.data[DOMAIN_DATA]["connector_status"].get(key)
+
+    def get_connector_settings(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorSettings]:
+        key = (charge_point_id, connector_id)
+        return self.hass.data[DOMAIN_DATA]["connector_settings"].get(key)
 
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
         settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
@@ -189,7 +194,9 @@ class ChargeampsHandler:
                 _LOGGER.debug("Update data for chargepoint %s connector %d",
                               charge_point_id, connector_status.connector_id)
                 key = (charge_point_id, connector_status.connector_id)
-                self.hass.data[DOMAIN_DATA]["connector"][key] = connector_status
+                self.hass.data[DOMAIN_DATA]["connector_status"][key] = connector_status
+                connector_settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_status.connector_id)
+                self.hass.data[DOMAIN_DATA]["connector_settings"][key] = connector_settings
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 
@@ -201,7 +208,7 @@ class ChargeampsHandler:
             _LOGGER.warning("Current value is not correct. %s", ex)
             return
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        connector_id = param.get("connector", self.default_connector_id)
+        connector_id = param.get("connector_status", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
 
     async def async_set_light(self, param):
@@ -220,11 +227,11 @@ class ChargeampsHandler:
     async def async_enable_ev(self, param):
         """Enable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        connector_id = param.get("connector", self.default_connector_id)
+        connector_id = param.get("connector_status", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "On")
 
     async def async_disable_ev(self, param=None):
         """Disable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        connector_id = param.get("connector", self.default_connector_id)
+        connector_id = param.get("connector_status", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
