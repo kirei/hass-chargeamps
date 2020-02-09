@@ -32,11 +32,16 @@ N.B. You need an API key from [Charge Amps Support](mailto:support@charge-amps.c
 
 ## Entities
 
-Each Chargeamps chargepoint connector will be represented as a sensor with the current status of the connector as the state.
+Each Chargeamps chargepoint connector will be represented as a sensor with the current status of the connector as the state. Each connector will also be represented as a switch that can be used to enable/disable the connector.
 
-### Additional attributes
+
+### Additional sensor attributes
 
 - `total_consumption_kwh`
+
+### Additional switch attributes
+
+- `max_current`
 
 
 ## Services
