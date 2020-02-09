@@ -2,8 +2,8 @@
 # Base component constants
 DOMAIN = "chargeamps"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.1"
-PLATFORMS = ["sensor"]
+VERSION = "0.0.2"
+PLATFORMS = ["sensor", "switch"]
 ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 
 # Icons
