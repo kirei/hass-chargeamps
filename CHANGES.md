@@ -1,6 +1,6 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.0.0 (2020-02-xx)
+## 1.0.0 (2020-02-24)
 
 - Add switch for each Chargepoint connector.
 
