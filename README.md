@@ -1,6 +1,6 @@
-# Chargeamps for Home Assistant
+# Charge Amps for Home Assistant
 
-This repository contains a [Chargeamps](https://charge-amps.com/) component for [Home Assistant](https://www.home-assistant.io/).
+This repository contains a [Charge Amps](https://charge-amps.com/) component for [Home Assistant](https://www.home-assistant.io/).
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![travis_ci_badge](https://travis-ci.org/kirei/python-chargeamps.svg?branch=master)](https://travis-ci.org/kirei/python-chargeamps)
 
