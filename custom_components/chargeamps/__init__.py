@@ -236,7 +236,7 @@ class ChargeampsHandler:
             _LOGGER.warning("Current value is not correct. %s", ex)
             return
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        connector_id = param.get("connector_status", self.default_connector_id)
+        connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
 
     async def async_set_light(self, param):
@@ -255,11 +255,11 @@ class ChargeampsHandler:
     async def async_enable_ev(self, param):
         """Enable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        connector_id = param.get("connector_status", self.default_connector_id)
+        connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "On")
 
     async def async_disable_ev(self, param=None):
         """Disable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
-        connector_id = param.get("connector_status", self.default_connector_id)
+        connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
