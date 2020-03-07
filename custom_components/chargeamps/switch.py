@@ -71,7 +71,7 @@ class ChargeampsSwitch(SwitchDevice):
             self._status = False
         else:
             self._status = None
-        self._attributes["max_current"] = round(settings.max_current)
+        self._attributes["max_current"] = round(settings.max_current) if settings.max_current else None
 
     async def async_turn_on(self, **kwargs):  # pylint: disable=unused-argument
         """Turn on the switch."""
