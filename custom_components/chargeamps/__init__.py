@@ -251,7 +251,7 @@ class ChargeampsHandler:
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
         if SLEEP_AFTER_SET:
-            asyncio.sleep(SLEEP_AFTER_SET)
+            await asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
 
     async def async_set_light(self, param):
@@ -267,7 +267,7 @@ class ChargeampsHandler:
             return
         await self.set_chargepoint_lights(charge_point_id, dimmer, downlight)
         if SLEEP_AFTER_SET:
-            asyncio.sleep(SLEEP_AFTER_SET)
+            await asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
 
     async def async_enable_ev(self, param):
@@ -276,7 +276,7 @@ class ChargeampsHandler:
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "On")
         if SLEEP_AFTER_SET:
-            asyncio.sleep(SLEEP_AFTER_SET)
+            await asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
 
     async def async_disable_ev(self, param=None):
@@ -285,5 +285,5 @@ class ChargeampsHandler:
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
         if SLEEP_AFTER_SET:
-            asyncio.sleep(SLEEP_AFTER_SET)
+            await asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
