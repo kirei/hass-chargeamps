@@ -21,7 +21,7 @@ async def async_setup_platform(
             sensors.append(
                 ChargeampsSensor(
                     hass,
-                    cp_info.name + "_" + str(connector.charge_point_id) + "_connector_" + str(connector.connector_id),
+                    f"{cp_info.name}_{connector.charge_point_id}_connector_{connector.connector_id}",
                     connector.charge_point_id,
                     connector.connector_id,
                 )
