@@ -102,6 +102,8 @@ class ChargeampsSensor(Entity):
         return {
             "identifiers": {(DOMAIN, self.unique_id)},
             "name": self._name,
+            "charge_point_id": self.charge_point_id,
+            "connector_id": self.connector_id,
             "manufacturer": "Chargeamps",
             "model": info.type,
             "sw_version": info.firmware_version,
