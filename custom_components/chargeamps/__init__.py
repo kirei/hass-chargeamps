@@ -33,7 +33,7 @@ from .const import (
 )
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
-SLEET_AFTER_SET = 10
+SLEEP_AFTER_SET = 10
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -250,8 +250,8 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
-        if SLEET_AFTER_SET:
-            asyncio.sleep(SLEET_AFTER_SET)
+        if SLEEP_AFTER_SET:
+            asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
 
     async def async_set_light(self, param):
@@ -266,8 +266,8 @@ class ChargeampsHandler:
             _LOGGER.warning("Downlight must be true or false")
             return
         await self.set_chargepoint_lights(charge_point_id, dimmer, downlight)
-        if SLEET_AFTER_SET:
-            asyncio.sleep(SLEET_AFTER_SET)
+        if SLEEP_AFTER_SET:
+            asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
 
     async def async_enable_ev(self, param):
@@ -275,8 +275,8 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "On")
-        if SLEET_AFTER_SET:
-            asyncio.sleep(SLEET_AFTER_SET)
+        if SLEEP_AFTER_SET:
+            asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
 
     async def async_disable_ev(self, param=None):
@@ -284,6 +284,6 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
-        if SLEET_AFTER_SET:
-            asyncio.sleep(SLEET_AFTER_SET)
+        if SLEEP_AFTER_SET:
+            asyncio.sleep(SLEEP_AFTER_SET)
         await self.update_data(charge_point_id)
