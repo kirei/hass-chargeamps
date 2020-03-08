@@ -46,6 +46,16 @@ class ChargeampsSensor(Entity):
         self._icon = ICON
         self._state = None
         self._attributes = {}
+        self._interviewed = False
+
+    async def interview(self):
+        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
+        connector_info = self.handler.get_connector_info(
+            self.charge_point_id, self.connector_id
+        )
+        self._attributes["chargepoint_type"] = chargepoint_info.type
+        self._attributes["connector_type"] = connector_info.type
+        self._interviewed = True
 
     async def async_update(self):
         """Update the sensor."""
@@ -69,6 +79,8 @@ class ChargeampsSensor(Entity):
         self._attributes["total_consumption_kwh"] = round(
             status.total_consumption_kwh, 3
         )
+        if not self._interviewed:
+            await self.interview()
 
     @property
     def name(self):
@@ -94,19 +106,3 @@ class ChargeampsSensor(Entity):
     def unique_id(self):
         """Return a unique ID to use for this sensor."""
         return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"
-
-    @property
-    def device_info(self):
-        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
-        connector_info = self.handler.get_connector_info(
-            self.charge_point_id, self.connector_id
-        )
-        return {
-            "identifiers": {(DOMAIN, self.unique_id)},
-            "name": self._name,
-            "charge_point_id": self.charge_point_id,
-            "connector_id": self.connector_id,
-            "manufacturer": "Chargeamps",
-            "model": f"{chargepoint_info.type}/{connector_info.type}",
-            "sw_version": chargepoint_info.firmware_version,
-        }

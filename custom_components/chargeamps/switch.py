@@ -111,19 +111,3 @@ class ChargeampsSwitch(SwitchDevice):
     def unique_id(self):
         """Return a unique ID to use for this switch."""
         return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"
-
-    @property
-    def device_info(self):
-        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
-        connector_info = self.handler.get_connector_info(
-            self.charge_point_id, self.connector_id
-        )
-        return {
-            "identifiers": {(DOMAIN, self.unique_id)},
-            "name": self._name,
-            "charge_point_id": self.charge_point_id,
-            "connector_id": self.connector_id,
-            "manufacturer": "Chargeamps",
-            "model": f"{chargepoint_info.type}/{connector_info.type}",
-            "sw_version": chargepoint_info.firmware_version,
-        }
