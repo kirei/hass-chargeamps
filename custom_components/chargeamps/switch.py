@@ -109,7 +109,7 @@ class ChargeampsSwitch(SwitchDevice):
 
     @property
     def unique_id(self):
-        """Return a unique ID to use for this sswi."""
+        """Return a unique ID to use for this switch."""
         return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"
 
     @property
