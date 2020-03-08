@@ -97,14 +97,16 @@ class ChargeampsSensor(Entity):
 
     @property
     def device_info(self):
-        info = self.handler.get_chargepoint_info(self.charge_point_id)
-        _LOGGER.debug("INFO = %s", info)
+        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
+        connector_info = self.handler.get_connector_info(
+            self.charge_point_id, self.connector_id
+        )
         return {
             "identifiers": {(DOMAIN, self.unique_id)},
             "name": self._name,
             "charge_point_id": self.charge_point_id,
             "connector_id": self.connector_id,
             "manufacturer": "Chargeamps",
-            "model": info.type,
-            "sw_version": info.firmware_version,
+            "model": f"{chargepoint_info.type}/{connector_info.type}",
+            "sw_version": chargepoint_info.firmware_version,
         }

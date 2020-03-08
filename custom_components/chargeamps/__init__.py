@@ -13,6 +13,7 @@ import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from chargeamps.base import (
     ChargePoint,
+    ChargePointConnector,
     ChargePointConnectorStatus,
     ChargePointConnectorSettings,
 )
@@ -99,8 +100,9 @@ async def async_setup(hass, config):
 
     handler = ChargeampsHandler(hass, client, charge_point_ids, readonly)
     hass.data[DOMAIN_DATA]["handler"] = handler
-    hass.data[DOMAIN_DATA]["info"] = {}
-    hass.data[DOMAIN_DATA]["chargepoint"] = {}
+    hass.data[DOMAIN_DATA]["chargepoint_info"] = {}
+    hass.data[DOMAIN_DATA]["chargepoint_status"] = {}
+    hass.data[DOMAIN_DATA]["connector_info"] = {}
     hass.data[DOMAIN_DATA]["connector_status"] = {}
     hass.data[DOMAIN_DATA]["connector_settings"] = {}
     await handler.update_info()
@@ -146,7 +148,11 @@ class ChargeampsHandler:
         return res
 
     def get_chargepoint_info(self, charge_point_id) -> ChargePoint:
-        return self.hass.data[DOMAIN_DATA]["info"].get(charge_point_id)
+        return self.hass.data[DOMAIN_DATA]["chargepoint_info"].get(charge_point_id)
+
+    def get_connector_info(self, charge_point_id, connector_id) -> ChargePointConnector:
+        key = (charge_point_id, connector_id)
+        return self.hass.data[DOMAIN_DATA]["connector_info"].get(key)
 
     async def set_chargepoint_lights(self, charge_point_id, dimmer, downlight):
         settings = await self.client.get_chargepoint_settings(charge_point_id)
@@ -199,9 +205,13 @@ class ChargeampsHandler:
     async def update_info(self):
         for cp in await self.client.get_chargepoints():
             if cp.id in self.charge_point_ids:
-                self.hass.data[DOMAIN_DATA]["info"][cp.id] = cp
+                _LOGGER.debug("CHARGEPOINT INFO = %s", cp)
+                self.hass.data[DOMAIN_DATA]["chargepoint_info"][cp.id] = cp
+                for c in cp.connectors:
+                    key = (c.charge_point_id, c.connector_id)
+                    self.hass.data[DOMAIN_DATA]["connector_info"][key] = c
+                _LOGGER.debug("CONNECTOR INFO = %s", c)
                 _LOGGER.info("Update info for chargepoint %s", cp.id)
-                _LOGGER.debug("INFO = %s", cp)
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def update_data(self, charge_point_id):
@@ -210,7 +220,7 @@ class ChargeampsHandler:
             _LOGGER.debug("Update data for chargepoint %s", charge_point_id)
             status = await self.client.get_chargepoint_status(charge_point_id)
             _LOGGER.debug("STATUS = %s", status)
-            self.hass.data[DOMAIN_DATA]["chargepoint"][charge_point_id] = status
+            self.hass.data[DOMAIN_DATA]["chargepoint_status"][charge_point_id] = status
             for connector_status in status.connector_statuses:
                 _LOGGER.debug(
                     "Update data for chargepoint %s connector %d",
