@@ -213,7 +213,11 @@ class ChargeampsHandler:
                 _LOGGER.debug("CONNECTOR INFO = %s", c)
                 _LOGGER.info("Update info for chargepoint %s", cp.id)
 
-    async def update_data(self, charge_point_id):
+    @Throttle(MIN_TIME_BETWEEN_UPDATES)
+    async def update_data(self):
+        await self.force_update_data(self.charge_point_id)
+
+    async def force_update_data(self, charge_point_id):
         """Update data."""
         try:
             _LOGGER.debug("Update data for chargepoint %s", charge_point_id)
@@ -247,7 +251,7 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
-        await self.update_data(charge_point_id)
+        await self.force_update_data(charge_point_id)
 
     async def async_set_light(self, param):
         """Set charge point lights in async way."""
@@ -261,18 +265,18 @@ class ChargeampsHandler:
             _LOGGER.warning("Downlight must be true or false")
             return
         await self.set_chargepoint_lights(charge_point_id, dimmer, downlight)
-        await self.update_data(charge_point_id)
+        await self.force_update_data(charge_point_id)
 
     async def async_enable_ev(self, param):
         """Enable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "On")
-        await self.update_data(charge_point_id)
+        await self.force_update_data(charge_point_id)
 
     async def async_disable_ev(self, param=None):
         """Disable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
-        await self.update_data(charge_point_id)
+        await self.force_update_data(charge_point_id)

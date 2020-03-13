@@ -3,10 +3,8 @@
 import logging
 
 from homeassistant.components.switch import SwitchDevice
-from homeassistant.util import Throttle
 
 from .const import DOMAIN, DOMAIN_DATA, ICON
-from . import MIN_TIME_BETWEEN_UPDATES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,7 +47,6 @@ class ChargeampsSwitch(SwitchDevice):
         self._attributes = {}
         self._status = None
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def async_update(self):
         """Update the switch."""
         _LOGGER.debug(
