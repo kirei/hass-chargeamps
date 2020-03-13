@@ -10,7 +10,7 @@
 		"@jschlyter"
 	],
 	"requirements": [
-		"chargeamps==1.2.0"
+		"chargeamps==1.2.1"
 	],
 	"homeassistant": "0.103.0"
 }
