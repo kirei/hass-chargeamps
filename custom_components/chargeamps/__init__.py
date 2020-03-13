@@ -165,6 +165,7 @@ class ChargeampsHandler:
         else:
             _LOGGER.info("Setting chargepoint: %s", settings)
             await self.client.set_chargepoint_settings(settings)
+        await self.force_update_data(charge_point_id)
 
     def get_connector_status(
         self, charge_point_id, connector_id
@@ -188,6 +189,7 @@ class ChargeampsHandler:
         else:
             _LOGGER.info("Setting chargepoint connector: %s", settings)
             await self.client.set_chargepoint_connector_settings(settings)
+        await self.force_update_data(charge_point_id)
 
     async def set_connector_max_current(
         self, charge_point_id, connector_id, max_current
@@ -201,6 +203,7 @@ class ChargeampsHandler:
         else:
             _LOGGER.info("Setting chargepoint connector: %s", settings)
             await self.client.set_chargepoint_connector_settings(settings)
+        await self.force_update_data(charge_point_id)
 
     async def update_info(self):
         for cp in await self.client.get_chargepoints():
@@ -215,12 +218,16 @@ class ChargeampsHandler:
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def update_data(self, charge_point_id):
-        await self.force_update_data(charge_point_id)
+        _LOGGER.debug("Update data for chargepoint %s", charge_point_id)
+        await self._update_data(charge_point_id)
 
     async def force_update_data(self, charge_point_id):
+        _LOGGER.debug("Force update data for chargepoint %s", charge_point_id)
+        await self._update_data(charge_point_id)
+
+    async def _update_data(self, charge_point_id):
         """Update data."""
         try:
-            _LOGGER.debug("Update data for chargepoint %s", charge_point_id)
             status = await self.client.get_chargepoint_status(charge_point_id)
             _LOGGER.debug("STATUS = %s", status)
             self.hass.data[DOMAIN_DATA]["chargepoint_status"][charge_point_id] = status
@@ -251,7 +258,6 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_max_current(charge_point_id, connector_id, max_current)
-        await self.force_update_data(charge_point_id)
 
     async def async_set_light(self, param):
         """Set charge point lights in async way."""
@@ -265,18 +271,15 @@ class ChargeampsHandler:
             _LOGGER.warning("Downlight must be true or false")
             return
         await self.set_chargepoint_lights(charge_point_id, dimmer, downlight)
-        await self.force_update_data(charge_point_id)
 
     async def async_enable_ev(self, param):
         """Enable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "On")
-        await self.force_update_data(charge_point_id)
 
     async def async_disable_ev(self, param=None):
         """Disable EV in async way."""
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
-        await self.force_update_data(charge_point_id)
