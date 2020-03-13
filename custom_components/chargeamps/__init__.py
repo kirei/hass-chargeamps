@@ -5,7 +5,6 @@ For more details about this component, please refer to
 https://github.com/kirei/hass-chargeamps
 """
 
-import asyncio
 import logging
 from datetime import timedelta
 from typing import Optional
@@ -33,7 +32,6 @@ from .const import (
 )
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
-SLEEP_AFTER_SET = 10
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -167,8 +165,6 @@ class ChargeampsHandler:
         else:
             _LOGGER.info("Setting chargepoint: %s", settings)
             await self.client.set_chargepoint_settings(settings)
-            if SLEEP_AFTER_SET:
-                await asyncio.sleep(SLEEP_AFTER_SET)
 
     def get_connector_status(
         self, charge_point_id, connector_id
@@ -192,8 +188,6 @@ class ChargeampsHandler:
         else:
             _LOGGER.info("Setting chargepoint connector: %s", settings)
             await self.client.set_chargepoint_connector_settings(settings)
-            if SLEEP_AFTER_SET:
-                await asyncio.sleep(SLEEP_AFTER_SET)
 
     async def set_connector_max_current(
         self, charge_point_id, connector_id, max_current
@@ -207,8 +201,6 @@ class ChargeampsHandler:
         else:
             _LOGGER.info("Setting chargepoint connector: %s", settings)
             await self.client.set_chargepoint_connector_settings(settings)
-            if SLEEP_AFTER_SET:
-                await asyncio.sleep(SLEEP_AFTER_SET)
 
     async def update_info(self):
         for cp in await self.client.get_chargepoints():
