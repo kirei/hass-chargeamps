@@ -3,8 +3,10 @@
 import logging
 
 from homeassistant.helpers.entity import Entity
+from homeassistant.util import Throttle
 
 from .const import DOMAIN, DOMAIN_DATA, ICON
+from . import MIN_TIME_BETWEEN_UPDATES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,6 +59,7 @@ class ChargeampsSensor(Entity):
         self._attributes["connector_type"] = connector_info.type
         self._interviewed = True
 
+    @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def async_update(self):
         """Update the sensor."""
         _LOGGER.debug(

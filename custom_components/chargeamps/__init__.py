@@ -213,7 +213,6 @@ class ChargeampsHandler:
                 _LOGGER.debug("CONNECTOR INFO = %s", c)
                 _LOGGER.info("Update info for chargepoint %s", cp.id)
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def update_data(self, charge_point_id):
         """Update data."""
         try:
