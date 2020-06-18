@@ -34,8 +34,8 @@ async def async_setup_platform(
     async_add_entities(sensors, True)
 
 
-class ChargeampsSensor(Entity):
-    """Chargeamps Sensor class."""
+class ChargeampsEntity(Entity):
+    """Chargeamps Entity class."""
 
     def __init__(self, hass, name, charge_point_id, connector_id):
         self.hass = hass
@@ -43,7 +43,6 @@ class ChargeampsSensor(Entity):
         self.connector_id = connector_id
         self.handler = self.hass.data[DOMAIN_DATA]["handler"]
         self._name = name
-        self._icon = ICON
         self._state = None
         self._attributes = {}
         self._interviewed = False
@@ -88,11 +87,6 @@ class ChargeampsSensor(Entity):
         return self._name
 
     @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        return self._icon
-
-    @property
     def state(self):
         """Return the state of the sensor."""
         return self._state
@@ -106,3 +100,16 @@ class ChargeampsSensor(Entity):
     def unique_id(self):
         """Return a unique ID to use for this sensor."""
         return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"
+
+
+class ChargeampsSensor(ChargeampsEntity):
+    """Chargeamps Sensor class."""
+
+    def __init__(self, hass, name, charge_point_id, connector_id):
+        super().__init__(self, hass, name, charge_point_id, connector_id):
+        self._icon = ICON
+
+    @property
+    def icon(self):
+        """Icon to use in the frontend, if any."""
+        return self._icon
