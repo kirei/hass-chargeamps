@@ -56,31 +56,6 @@ class ChargeampsEntity(Entity):
         self._attributes["connector_type"] = connector_info.type
         self._interviewed = True
 
-    async def async_update(self):
-        """Update the sensor."""
-        _LOGGER.debug(
-            "Update chargepoint %s connector %s",
-            self.charge_point_id,
-            self.connector_id,
-        )
-        await self.handler.update_data(self.charge_point_id)
-        _LOGGER.debug(
-            "Finished update chargepoint %s connector %s",
-            self.charge_point_id,
-            self.connector_id,
-        )
-        status = self.handler.get_connector_status(
-            self.charge_point_id, self.connector_id
-        )
-        if status is None:
-            return
-        self._state = status.status
-        self._attributes["total_consumption_kwh"] = round(
-            status.total_consumption_kwh, 3
-        )
-        if not self._interviewed:
-            await self.interview()
-
     @property
     def name(self):
         """Return the name of the sensor."""
@@ -113,3 +88,28 @@ class ChargeampsSensor(ChargeampsEntity):
     def icon(self):
         """Icon to use in the frontend, if any."""
         return self._icon
+
+    async def async_update(self):
+        """Update the sensor."""
+        _LOGGER.debug(
+            "Update chargepoint %s connector %s",
+            self.charge_point_id,
+            self.connector_id,
+        )
+        await self.handler.update_data(self.charge_point_id)
+        _LOGGER.debug(
+            "Finished update chargepoint %s connector %s",
+            self.charge_point_id,
+            self.connector_id,
+        )
+        status = self.handler.get_connector_status(
+            self.charge_point_id, self.connector_id
+        )
+        if status is None:
+            return
+        self._state = status.status
+        self._attributes["total_consumption_kwh"] = round(
+            status.total_consumption_kwh, 3
+        )
+        if not self._interviewed:
+            await self.interview()
