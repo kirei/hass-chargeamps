@@ -2,9 +2,10 @@
 
 import logging
 
-from homeassistant.components.switch import SwitchDevice
+from homeassistant.components.switch import SwitchEntity
 
-from .const import DOMAIN, DOMAIN_DATA, ICON
+from . import ChargeampsEntity
+from .const import DOMAIN, DOMAIN_DATA
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,18 +35,11 @@ async def async_setup_platform(
     async_add_entities(switches, True)
 
 
-class ChargeampsSwitch(SwitchDevice):
+class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
     """Chargeamps Switch class."""
 
     def __init__(self, hass, name, charge_point_id, connector_id):
-        self.hass = hass
-        self.charge_point_id = charge_point_id
-        self.connector_id = connector_id
-        self.handler = self.hass.data[DOMAIN_DATA]["handler"]
-        self._name = name
-        self._icon = ICON
-        self._attributes = {}
-        self._status = None
+        super().__init__(hass, name, charge_point_id, connector_id)
 
     async def async_update(self):
         """Update the switch."""
@@ -91,23 +85,3 @@ class ChargeampsSwitch(SwitchDevice):
     def is_on(self):
         """Return true if the switch is on."""
         return self._status
-
-    @property
-    def name(self):
-        """Return the name of the switch."""
-        return self._name
-
-    @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        return self._icon
-
-    @property
-    def device_state_attributes(self):
-        """Return the state attributes of the switch."""
-        return self._attributes
-
-    @property
-    def unique_id(self):
-        """Return a unique ID to use for this switch."""
-        return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"
