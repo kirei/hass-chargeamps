@@ -107,6 +107,8 @@ async def async_setup(hass, config):
     hass.data[DOMAIN_DATA]["connector_settings"] = {}
     hass.data[DOMAIN_DATA]["chargepoint_total_energy"] = {}
     await handler.update_info()
+    for cp_id in charge_point_ids:
+        await handler.force_update_data(cp_id)
 
     # Register services to hass
     async def execute_service(call):
