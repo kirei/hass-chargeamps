@@ -29,6 +29,14 @@ async def async_setup_platform(
                     connector.connector_id,
                 )
             )
+            sensors.append(
+                ChargeampsPowerSensor(
+                    hass,
+                    f"{cp_info.name} {connector.charge_point_id} {connector.connector_id} Power",
+                    connector.charge_point_id,
+                    connector.connector_id,
+                )
+            )
             _LOGGER.info(
                 "Adding chargepoint %s connector %s",
                 connector.charge_point_id,
@@ -156,3 +164,59 @@ class ChargeampsTotalEnergy(Entity):
     def unique_id(self):
         """Return a unique ID to use for this sensor."""
         return f"{DOMAIN}_{self.charge_point_id}_total_energy"
+
+
+class ChargeampsPowerSensor(ChargeampsSensor):
+    """Chargeamps Power Sensor class."""
+
+    async def async_update(self):
+        """Update the sensor."""
+        _LOGGER.debug(
+            "Update chargepoint %s connector %s",
+            self.charge_point_id,
+            self.connector_id,
+        )
+        await self.handler.update_data(self.charge_point_id)
+        _LOGGER.debug(
+            "Finished update chargepoint %s connector %s",
+            self.charge_point_id,
+            self.connector_id,
+        )
+        measurements = self.handler.get_connector_measurements(
+            self.charge_point_id, self.connector_id
+        )
+        if measurements:
+            self._state = round(
+                sum([phase.current * phase.voltage for phase in measurements]), 0
+            )
+            self._attributes["active_phase"] = " ".join(
+                [i.phase for i in measurements if i.current > 0]
+            )
+            for measure in measurements:
+                self._attributes[f"{measure.phase.lower()}_power"] = round(
+                    measure.voltage * measure.current, 0
+                )
+                self._attributes[f"{measure.phase.lower()}_current"] = round(
+                    measure.current, 1
+                )
+        else:
+            self._attributes["active_phase"] = ""
+            for phase in range(1, 4):
+                for measure in ("power", "current"):
+                    self._attributes[f"L{phase.lower()}_{measure}"] = 0
+            self._state = 0
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this sensor."""
+        return f"{super().unique_id}_power"
+
+    @property
+    def device_class(self):
+        """Return the device class of the sensor."""
+        return DEVICE_CLASS_POWER
+
+    @property
+    def unit_of_measurement(self):
+        """Return the unit of measurement."""
+        return POWER_WATT
