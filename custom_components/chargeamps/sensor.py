@@ -17,6 +17,9 @@ async def async_setup_platform(
     handler = hass.data[DOMAIN_DATA]["handler"]
     for cp_id in handler.charge_point_ids:
         cp_info = handler.get_chargepoint_info(cp_id)
+        sensors.append(
+            ChargeampsTotalEnergy(hass, f"{cp_info.name}_{cp_id}_total_energy", cp_id,)
+        )
         for connector in cp_info.connectors:
             sensors.append(
                 ChargeampsSensor(
@@ -113,3 +116,43 @@ class ChargeampsSensor(ChargeampsEntity):
         )
         if not self._interviewed:
             await self.interview()
+
+
+class ChargeampsTotalEnergy(Entity):
+    """Chargeamps Total Energy class."""
+
+    def __init__(self, hass, name, charge_point_id):
+        self.hass = hass
+        self.charge_point_id = charge_point_id
+        self.handler = self.hass.data[DOMAIN_DATA]["handler"]
+        self._name = name
+        self._state = None
+
+    async def async_update(self):
+        """Update the sensor."""
+        _LOGGER.debug(
+            "Update chargepoint %s", self.charge_point_id,
+        )
+        await self.handler.update_data(self.charge_point_id)
+        _LOGGER.debug(
+            "Finished update chargepoint %s", self.charge_point_id,
+        )
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def state(self):
+        return self.handler.get_chargepoint_total_energy(self.charge_point_id)
+
+    @property
+    def unit_of_measurement(self):
+        """Return the unit of measurement."""
+        return "kWh"
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this sensor."""
+        return f"{DOMAIN}_{self.charge_point_id}_total_energy"

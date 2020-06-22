@@ -105,6 +105,7 @@ async def async_setup(hass, config):
     hass.data[DOMAIN_DATA]["connector_info"] = {}
     hass.data[DOMAIN_DATA]["connector_status"] = {}
     hass.data[DOMAIN_DATA]["connector_settings"] = {}
+    hass.data[DOMAIN_DATA]["chargepoint_total_energy"] = {}
     await handler.update_info()
 
     # Register services to hass
@@ -146,6 +147,11 @@ class ChargeampsHandler:
         for cp_id in self.charge_point_ids:
             res.append(await self.client.get_chargepoint_status(cp_id))
         return res
+
+    def get_chargepoint_total_energy(self, charge_point_id) -> float:
+        return self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"].get(
+            charge_point_id
+        )
 
     def get_chargepoint_info(self, charge_point_id) -> ChargePoint:
         return self.hass.data[DOMAIN_DATA]["chargepoint_info"].get(charge_point_id)
@@ -245,6 +251,20 @@ class ChargeampsHandler:
                 self.hass.data[DOMAIN_DATA]["connector_settings"][
                     key
                 ] = connector_settings
+            total_energy = sum(
+                [
+                    v.total_consumption_kwh
+                    for v in await self.client.get_all_chargingsessions(charge_point_id)
+                ]
+            )
+            _LOGGER.debug(
+                "Total consumption for chargepoint %s: %f",
+                charge_point_id,
+                total_energy,
+            )
+            self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"][
+                charge_point_id
+            ] = round(total_energy, 2)
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 
