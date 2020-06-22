@@ -9,15 +9,16 @@ import logging
 from datetime import timedelta
 from typing import Optional
 
-import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from chargeamps.base import (
     ChargePoint,
     ChargePointConnector,
-    ChargePointConnectorStatus,
     ChargePointConnectorSettings,
+    ChargePointConnectorStatus,
 )
 from chargeamps.external import ChargeAmpsExternalClient
+
+import homeassistant.helpers.config_validation as cv
 from homeassistant.const import CONF_API_KEY, CONF_PASSWORD, CONF_URL, CONF_USERNAME
 from homeassistant.helpers import discovery
 from homeassistant.util import Throttle
@@ -25,10 +26,10 @@ from homeassistant.util import Throttle
 from .const import (
     CONF_CHARGEPOINTS,
     CONF_READONLY,
+    DIMMER_VALUES,
     DOMAIN,
     DOMAIN_DATA,
     PLATFORMS,
-    DIMMER_VALUES,
 )
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
@@ -107,6 +108,8 @@ async def async_setup(hass, config):
     hass.data[DOMAIN_DATA]["connector_settings"] = {}
     hass.data[DOMAIN_DATA]["chargepoint_total_energy"] = {}
     await handler.update_info()
+    for cp_id in charge_point_ids:
+        await handler.force_update_data(cp_id)
 
     # Register services to hass
     async def execute_service(call):
@@ -184,6 +187,12 @@ class ChargeampsHandler:
     ) -> Optional[ChargePointConnectorSettings]:
         key = (charge_point_id, connector_id)
         return self.hass.data[DOMAIN_DATA]["connector_settings"].get(key)
+
+    def get_connector_measurements(self, charge_point_id, connector_id):
+        connector_status = self.get_connector_status(charge_point_id, connector_id)
+        if connector_status:
+            return connector_status.measurements
+        return None
 
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
         settings = await self.client.get_chargepoint_connector_settings(
