@@ -81,7 +81,7 @@ class ChargeampsSensor(ChargeampsEntity):
     """Chargeamps Sensor class."""
 
     def __init__(self, hass, name, charge_point_id, connector_id):
-        super().__init__(self, hass, name, charge_point_id, connector_id):
+        super().__init__(self, hass, name, charge_point_id, connector_id)
         self._icon = ICON
 
     @property
