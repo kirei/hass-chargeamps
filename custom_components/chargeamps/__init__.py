@@ -9,15 +9,16 @@ import logging
 from datetime import timedelta
 from typing import Optional
 
-import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from chargeamps.base import (
     ChargePoint,
     ChargePointConnector,
-    ChargePointConnectorStatus,
     ChargePointConnectorSettings,
+    ChargePointConnectorStatus,
 )
 from chargeamps.external import ChargeAmpsExternalClient
+
+import homeassistant.helpers.config_validation as cv
 from homeassistant.const import CONF_API_KEY, CONF_PASSWORD, CONF_URL, CONF_USERNAME
 from homeassistant.helpers import discovery
 from homeassistant.util import Throttle
@@ -25,10 +26,10 @@ from homeassistant.util import Throttle
 from .const import (
     CONF_CHARGEPOINTS,
     CONF_READONLY,
+    DIMMER_VALUES,
     DOMAIN,
     DOMAIN_DATA,
     PLATFORMS,
-    DIMMER_VALUES,
 )
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
