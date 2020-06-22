@@ -3,6 +3,7 @@
 import logging
 
 from homeassistant.helpers.entity import Entity
+from homeassistant.const import DEVICE_CLASS_POWER, POWER_WATT
 
 from .const import DOMAIN, DOMAIN_DATA, ICON
 
@@ -126,15 +127,11 @@ class ChargeampsSensor(ChargeampsEntity):
             await self.interview()
 
 
-class ChargeampsTotalEnergy(Entity):
+class ChargeampsTotalEnergy(ChargeampsEntity):
     """Chargeamps Total Energy class."""
 
     def __init__(self, hass, name, charge_point_id):
-        self.hass = hass
-        self.charge_point_id = charge_point_id
-        self.handler = self.hass.data[DOMAIN_DATA]["handler"]
-        self._name = name
-        self._state = None
+        super().__init__(self, hass, name, charge_point_id, "total_energy")
 
     async def async_update(self):
         """Update the sensor."""
@@ -142,31 +139,18 @@ class ChargeampsTotalEnergy(Entity):
             "Update chargepoint %s", self.charge_point_id,
         )
         await self.handler.update_data(self.charge_point_id)
+        self._state = self.handler.get_chargepoint_total_energy(self.charge_point_id)
         _LOGGER.debug(
             "Finished update chargepoint %s", self.charge_point_id,
         )
-
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def state(self):
-        return self.handler.get_chargepoint_total_energy(self.charge_point_id)
 
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
         return "kWh"
 
-    @property
-    def unique_id(self):
-        """Return a unique ID to use for this sensor."""
-        return f"{DOMAIN}_{self.charge_point_id}_total_energy"
 
-
-class ChargeampsPowerSensor(ChargeampsSensor):
+class ChargeampsPowerSensor(ChargeampsEntity):
     """Chargeamps Power Sensor class."""
 
     async def async_update(self):
