@@ -187,6 +187,12 @@ class ChargeampsHandler:
         key = (charge_point_id, connector_id)
         return self.hass.data[DOMAIN_DATA]["connector_settings"].get(key)
 
+    def get_connector_measurements(self, charge_point_id, connector_id):
+        connector_status = self.get_connector_status(charge_point_id, connector_id)
+        if connector_status:
+            return connector_status.measurements
+        return None
+
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
         settings = await self.client.get_chargepoint_connector_settings(
             charge_point_id, connector_id
