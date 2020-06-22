@@ -2,8 +2,8 @@
 
 import logging
 
-from homeassistant.helpers.entity import Entity
 from homeassistant.const import DEVICE_CLASS_POWER, POWER_WATT
+from homeassistant.helpers.entity import Entity
 
 from .const import DOMAIN, DOMAIN_DATA, ICON
 
