@@ -2,10 +2,10 @@
 
 import logging
 
-from homeassistant.const import DEVICE_CLASS_POWER, POWER_WATT
+from homeassistant.const import DEVICE_CLASS_POWER, ENERGY_KILO_WATT_HOUR, POWER_WATT
 from homeassistant.helpers.entity import Entity
 
-from .const import DOMAIN, DOMAIN_DATA, ICON
+from .const import DOMAIN, DOMAIN_DATA, ICON, ICON_ENERGY
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -93,7 +93,7 @@ class ChargeampsSensor(ChargeampsEntity):
     """Chargeamps Sensor class."""
 
     def __init__(self, hass, name, charge_point_id, connector_id):
-        super().__init__(self, hass, name, charge_point_id, connector_id)
+        super().__init__(hass, name, charge_point_id, connector_id)
         self._icon = ICON
 
     @property
@@ -131,7 +131,12 @@ class ChargeampsTotalEnergy(ChargeampsEntity):
     """Chargeamps Total Energy class."""
 
     def __init__(self, hass, name, charge_point_id):
-        super().__init__(self, hass, name, charge_point_id, "total_energy")
+        super().__init__(hass, name, charge_point_id, "total_energy")
+
+    @property
+    def icon(self):
+        """Icon to use in the frontend, if any."""
+        return ICON_ENERGY
 
     async def async_update(self):
         """Update the sensor."""
@@ -147,7 +152,7 @@ class ChargeampsTotalEnergy(ChargeampsEntity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return "kWh"
+        return ENERGY_KILO_WATT_HOUR
 
 
 class ChargeampsPowerSensor(ChargeampsEntity):
@@ -187,7 +192,7 @@ class ChargeampsPowerSensor(ChargeampsEntity):
             self._attributes["active_phase"] = ""
             for phase in range(1, 4):
                 for measure in ("power", "current"):
-                    self._attributes[f"L{phase.lower()}_{measure}"] = 0
+                    self._attributes[f"l{phase}_{measure}"] = 0
             self._state = 0
 
     @property

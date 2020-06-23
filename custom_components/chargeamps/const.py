@@ -8,6 +8,7 @@ ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 
 # Icons
 ICON = "mdi:car-connected"
+ICON_ENERGY = "mdi:car-energy"
 
 # Configuration
 CONF_CHARGEPOINTS = "chargepoints"
