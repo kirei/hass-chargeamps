@@ -40,6 +40,7 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
 
     def __init__(self, hass, name, charge_point_id, connector_id):
         super().__init__(hass, name, charge_point_id, connector_id)
+        self._current_power_w = 0
 
     async def async_update(self):
         """Update the switch."""
@@ -68,6 +69,15 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
         self._attributes["max_current"] = (
             round(settings.max_current) if settings.max_current else None
         )
+        measurements = self.handler.get_connector_measurements(
+            self.charge_point_id, self.connector_id
+        )
+        if measurements:
+            self._current_power_w = round(
+                sum([phase.current * phase.voltage for phase in measurements]), 0
+            )
+        else:
+            self._current_power_w = 0
 
     async def async_turn_on(self, **kwargs):  # pylint: disable=unused-argument
         """Turn on the switch."""
@@ -85,3 +95,8 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
     def is_on(self):
         """Return true if the switch is on."""
         return self._status
+
+    @property
+    def current_power_w(self):
+        """Return the current power usage in W."""
+        return self._current_power_w
