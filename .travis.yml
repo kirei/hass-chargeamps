@@ -6,7 +6,6 @@ python:
   - "3.8"
 install:
   - pip install pylama black isort
-  - pip install -e .
 script:
   - python -m compileall custom_components/chargeamps
   - pylama custom_components/chargeamps
