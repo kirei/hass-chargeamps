@@ -26,11 +26,12 @@ from homeassistant.util import Throttle
 from .const import (
     CONF_CHARGEPOINTS,
     CONF_READONLY,
+    DEFAULT_ICON,
     DIMMER_VALUES,
     DOMAIN,
     DOMAIN_DATA,
+    ICON_MAP,
     PLATFORMS,
-    ICON_ENERGY,
 )
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
@@ -351,7 +352,12 @@ class ChargeampsEntity(Entity):
     def icon(self):
         """Icon to use in the frontend, if any."""
         if not self.device_class:
-            return ICON_ENERGY
+            connector_info = self.handler.get_connector_info(
+                self.charge_point_id, self.connector_id
+            )
+            if connector_info:
+                return ICON_MAP.get(connector_info.type, DEFAULT_ICON)
+            return DEFAULT_ICON
 
     @property
     def device_state_attributes(self):
