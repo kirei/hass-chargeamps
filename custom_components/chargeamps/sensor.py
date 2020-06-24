@@ -3,10 +3,9 @@
 import logging
 
 from homeassistant.const import DEVICE_CLASS_POWER, ENERGY_KILO_WATT_HOUR, POWER_WATT
-from homeassistant.helpers.entity import Entity
 
 from . import ChargeampsEntity
-from .const import DOMAIN, DOMAIN_DATA
+from .const import DOMAIN_DATA
 
 _LOGGER = logging.getLogger(__name__)
 

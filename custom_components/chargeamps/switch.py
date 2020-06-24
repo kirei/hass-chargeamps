@@ -5,7 +5,7 @@ import logging
 from homeassistant.components.switch import SwitchEntity
 
 from . import ChargeampsEntity
-from .const import DOMAIN, DOMAIN_DATA
+from .const import DOMAIN_DATA
 
 _LOGGER = logging.getLogger(__name__)
 
