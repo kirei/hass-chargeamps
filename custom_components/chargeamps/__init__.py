@@ -20,14 +20,17 @@ from chargeamps.base import (
 from chargeamps.external import ChargeAmpsExternalClient
 from homeassistant.const import CONF_API_KEY, CONF_PASSWORD, CONF_URL, CONF_USERNAME
 from homeassistant.helpers import discovery
+from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
 
 from .const import (
     CONF_CHARGEPOINTS,
     CONF_READONLY,
+    DEFAULT_ICON,
     DIMMER_VALUES,
     DOMAIN,
     DOMAIN_DATA,
+    ICON_MAP,
     PLATFORMS,
 )
 
@@ -311,3 +314,57 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
+
+
+class ChargeampsEntity(Entity):
+    """Chargeamps Entity class."""
+
+    def __init__(self, hass, name, charge_point_id, connector_id):
+        self.hass = hass
+        self.charge_point_id = charge_point_id
+        self.connector_id = connector_id
+        self.handler = self.hass.data[DOMAIN_DATA]["handler"]
+        self._name = name
+        self._state = None
+        self._attributes = {}
+        self._interviewed = False
+
+    async def interview(self):
+        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
+        connector_info = self.handler.get_connector_info(
+            self.charge_point_id, self.connector_id
+        )
+        self._attributes["chargepoint_type"] = chargepoint_info.type
+        self._attributes["connector_type"] = connector_info.type
+        self._interviewed = True
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return self._name
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        return self._state
+
+    @property
+    def icon(self):
+        """Icon to use in the frontend, if any."""
+        if not self.device_class:
+            connector_info = self.handler.get_connector_info(
+                self.charge_point_id, self.connector_id
+            )
+            if connector_info:
+                return ICON_MAP.get(connector_info.type, DEFAULT_ICON)
+            return DEFAULT_ICON
+
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes of the sensor."""
+        return self._attributes
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this sensor."""
+        return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"

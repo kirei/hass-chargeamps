@@ -7,8 +7,11 @@ PLATFORMS = ["sensor", "switch"]
 ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 
 # Icons
-ICON = "mdi:car-connected"
-ICON_ENERGY = "mdi:car-energy"
+DEFAULT_ICON = "mdi:car-electric"
+ICON_MAP = {
+    "Charger": "mdi:ev-station",
+    "Schuko": "mdi:power-socket-de",
+}
 
 # Configuration
 CONF_CHARGEPOINTS = "chargepoints"

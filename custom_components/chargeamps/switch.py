@@ -2,9 +2,10 @@
 
 import logging
 
-from homeassistant.components.switch import SwitchDevice
+from homeassistant.components.switch import SwitchEntity
 
-from .const import DOMAIN, DOMAIN_DATA, ICON
+from . import ChargeampsEntity
+from .const import DOMAIN, DOMAIN_DATA
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,18 +35,12 @@ async def async_setup_platform(
     async_add_entities(switches, True)
 
 
-class ChargeampsSwitch(SwitchDevice):
+class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
     """Chargeamps Switch class."""
 
     def __init__(self, hass, name, charge_point_id, connector_id):
-        self.hass = hass
-        self.charge_point_id = charge_point_id
-        self.connector_id = connector_id
-        self.handler = self.hass.data[DOMAIN_DATA]["handler"]
-        self._name = name
-        self._icon = ICON
-        self._attributes = {}
-        self._status = None
+        super().__init__(hass, name, charge_point_id, connector_id)
+        self._current_power_w = 0
 
     async def async_update(self):
         """Update the switch."""
@@ -74,6 +69,15 @@ class ChargeampsSwitch(SwitchDevice):
         self._attributes["max_current"] = (
             round(settings.max_current) if settings.max_current else None
         )
+        measurements = self.handler.get_connector_measurements(
+            self.charge_point_id, self.connector_id
+        )
+        if measurements:
+            self._current_power_w = round(
+                sum([phase.current * phase.voltage for phase in measurements]), 0
+            )
+        else:
+            self._current_power_w = 0
 
     async def async_turn_on(self, **kwargs):  # pylint: disable=unused-argument
         """Turn on the switch."""
@@ -93,21 +97,6 @@ class ChargeampsSwitch(SwitchDevice):
         return self._status
 
     @property
-    def name(self):
-        """Return the name of the switch."""
-        return self._name
-
-    @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        return self._icon
-
-    @property
-    def device_state_attributes(self):
-        """Return the state attributes of the switch."""
-        return self._attributes
-
-    @property
-    def unique_id(self):
-        """Return a unique ID to use for this switch."""
-        return f"{DOMAIN}_{self.charge_point_id}_{self.connector_id}"
+    def current_power_w(self):
+        """Return the current power usage in W."""
+        return self._current_power_w
