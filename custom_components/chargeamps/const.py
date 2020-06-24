@@ -3,7 +3,7 @@
 DOMAIN = "chargeamps"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "1.0.0"
-PLATFORMS = ["sensor", "switch"]
+PLATFORMS = ["sensor", "switch", "light"]
 ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 
 # Icons

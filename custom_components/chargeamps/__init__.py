@@ -105,6 +105,7 @@ async def async_setup(hass, config):
     hass.data[DOMAIN_DATA]["handler"] = handler
     hass.data[DOMAIN_DATA]["chargepoint_info"] = {}
     hass.data[DOMAIN_DATA]["chargepoint_status"] = {}
+    hass.data[DOMAIN_DATA]["chargepoint_settings"] = {}
     hass.data[DOMAIN_DATA]["connector_info"] = {}
     hass.data[DOMAIN_DATA]["connector_status"] = {}
     hass.data[DOMAIN_DATA]["connector_settings"] = {}
@@ -160,6 +161,9 @@ class ChargeampsHandler:
 
     def get_chargepoint_info(self, charge_point_id) -> ChargePoint:
         return self.hass.data[DOMAIN_DATA]["chargepoint_info"].get(charge_point_id)
+
+    def get_chargepoint_settings(self, charge_point_id):
+        return self.hass.data[DOMAIN_DATA]["chargepoint_settings"].get(charge_point_id)
 
     def get_connector_info(self, charge_point_id, connector_id) -> ChargePointConnector:
         key = (charge_point_id, connector_id)
@@ -276,6 +280,10 @@ class ChargeampsHandler:
             self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"][
                 charge_point_id
             ] = round(total_energy, 2)
+            settings = await self.client.get_chargepoint_settings(charge_point_id)
+            self.hass.data[DOMAIN_DATA]["chargepoint_settings"][
+                charge_point_id
+            ] = settings
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 
