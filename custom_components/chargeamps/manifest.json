@@ -2,6 +2,7 @@
 	"domain": "chargeamps",
 	"name": "Chargeamps",
 	"documentation": "https://github.com/kirei/hass-chargeamps",
+	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues",
 	"dependencies": [
 
 	],
