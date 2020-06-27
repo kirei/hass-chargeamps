@@ -1,9 +1,10 @@
 {
 	"name": "Chargeamps",
 	"domains": [
-		"sensor"
+		"sensor",
+		"light",
+		"switch"
 	],
 	"iot_class": "cloud_polling",
-	"render_readme": true,
-	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues"
+	"render_readme": true
 }
