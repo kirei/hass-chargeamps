@@ -304,11 +304,11 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         dimmer = param.get("dimmer")
         if dimmer is not None and dimmer not in DIMMER_VALUES:
-            _LOGGER.warning("Dimmer is not one of %s", DIMMER_VALUES)
+            _LOGGER.warning("Dimmer is not one of %s - got %s", DIMMER_VALUES, dimmer)
             return
         downlight = param.get("downlight")
         if downlight is not None and not isinstance(downlight, bool):
-            _LOGGER.warning("Downlight must be true or false")
+            _LOGGER.warning("Downlight must be true or false - got %s", downlight)
             return
         await self.set_chargepoint_lights(charge_point_id, dimmer, downlight)
 
