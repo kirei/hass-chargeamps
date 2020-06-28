@@ -6,6 +6,7 @@
 - Add power sensors.
 - Add light platform.
 - Different icons for charge port and Schuko.
+- Fix deprecation warning of SwitchDevice.
 
 ## 1.0.0 (2020-03-13)
 
