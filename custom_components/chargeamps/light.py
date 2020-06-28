@@ -22,7 +22,7 @@ async def async_setup_platform(
         _LOGGER.warning("%s", cp_settings)
         for _type in ("dimmer", "downlight"):
             lights.append(
-                ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type,)
+                ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type)
             )
             _LOGGER.info(
                 "Adding chargepoint %s light %s", cp_id, _type,
@@ -65,7 +65,7 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
             else:
                 brightness = "high"
         else:
-            brightness = (True if self._light_type == "downlight" else "high",)
+            brightness = True if self._light_type == "downlight" else "high"
         await self.handler.async_set_light(
             {"chargepoint": self.charge_point_id, self._light_type: brightness}
         )
