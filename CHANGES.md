@@ -1,6 +1,6 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.1.0 (pending)
+## 1.1.0 (2020-06-30)
 
 - Add sensor for total energy.
 - Add power sensors.
