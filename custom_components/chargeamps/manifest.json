@@ -8,7 +8,7 @@
 	],
 	"config_flow": false,
 	"codeowners": [
-		"@jschlyter"
+		"@kirei"
 	],
 	"requirements": [
 		"chargeamps==1.4.0"
