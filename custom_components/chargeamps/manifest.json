@@ -12,6 +12,5 @@
 	],
 	"requirements": [
 		"chargeamps==1.4.0"
-	],
-	"homeassistant": "0.103.0"
+	]
 }
