@@ -1,5 +1,10 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.2.0 (2020-09-XX)
+
+- Add `charge_point_id` attribute to all entities.
+- Add `connector_id` attribute to sensors and switches.
+
 ## 1.1.0 (2020-06-30)
 
 - Add sensor for total energy.
