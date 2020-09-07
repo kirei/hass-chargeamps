@@ -41,6 +41,7 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
         self._supported_features = 0
         if light_type == "dimmer":
             self._supported_features |= SUPPORT_BRIGHTNESS
+        self._attributes["light_type"] = light_type
 
     @property
     def unique_id(self):
