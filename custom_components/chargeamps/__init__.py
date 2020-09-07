@@ -338,8 +338,9 @@ class ChargeampsEntity(Entity):
         self._state = None
         self._attributes = {
             "charge_point_id": charge_point_id,
-            "connector_id": connector_id,
         }
+        if connector_id is not None:
+            self._attributes["connector_id"] = connector_id
 
     @property
     def name(self):
