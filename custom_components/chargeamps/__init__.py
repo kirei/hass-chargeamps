@@ -334,7 +334,10 @@ class ChargeampsEntity(Entity):
         self.handler = self.hass.data[DOMAIN_DATA]["handler"]
         self._name = name
         self._state = None
-        self._attributes = {}
+        self._attributes = {
+            "charge_point_id": charge_point_id,
+            "connector_id": connector_id
+        }
         self._interviewed = False
 
     async def interview(self):
