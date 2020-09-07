@@ -55,6 +55,16 @@ class ChargeampsSensor(ChargeampsEntity):
 
     def __init__(self, hass, name, charge_point_id, connector_id):
         super().__init__(hass, name, charge_point_id, connector_id)
+        self._interviewed = False
+
+    async def interview(self):
+        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
+        connector_info = self.handler.get_connector_info(
+            self.charge_point_id, self.connector_id
+        )
+        self._attributes["chargepoint_type"] = chargepoint_info.type
+        self._attributes["connector_type"] = connector_info.type
+        self._interviewed = True
 
     async def async_update(self):
         """Update the sensor."""
