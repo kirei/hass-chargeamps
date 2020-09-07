@@ -340,16 +340,6 @@ class ChargeampsEntity(Entity):
             "charge_point_id": charge_point_id,
             "connector_id": connector_id,
         }
-        self._interviewed = False
-
-    async def interview(self):
-        chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
-        connector_info = self.handler.get_connector_info(
-            self.charge_point_id, self.connector_id
-        )
-        self._attributes["chargepoint_type"] = chargepoint_info.type
-        self._attributes["connector_type"] = connector_info.type
-        self._interviewed = True
 
     @property
     def name(self):
