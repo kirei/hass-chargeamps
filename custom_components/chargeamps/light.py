@@ -25,7 +25,9 @@ async def async_setup_platform(
                 ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type)
             )
             _LOGGER.info(
-                "Adding chargepoint %s light %s", cp_id, _type,
+                "Adding chargepoint %s light %s",
+                cp_id,
+                _type,
             )
     async_add_entities(lights, True)
 

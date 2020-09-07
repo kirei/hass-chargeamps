@@ -19,7 +19,11 @@ async def async_setup_platform(
     for cp_id in handler.charge_point_ids:
         cp_info = handler.get_chargepoint_info(cp_id)
         sensors.append(
-            ChargeampsTotalEnergy(hass, f"{cp_info.name}_{cp_id}_total_energy", cp_id,)
+            ChargeampsTotalEnergy(
+                hass,
+                f"{cp_info.name}_{cp_id}_total_energy",
+                cp_id,
+            )
         )
         for connector in cp_info.connectors:
             sensors.append(
@@ -87,12 +91,14 @@ class ChargeampsTotalEnergy(ChargeampsEntity):
     async def async_update(self):
         """Update the sensor."""
         _LOGGER.debug(
-            "Update chargepoint %s", self.charge_point_id,
+            "Update chargepoint %s",
+            self.charge_point_id,
         )
         await self.handler.update_data(self.charge_point_id)
         self._state = self.handler.get_chargepoint_total_energy(self.charge_point_id)
         _LOGGER.debug(
-            "Finished update chargepoint %s", self.charge_point_id,
+            "Finished update chargepoint %s",
+            self.charge_point_id,
         )
 
     @property

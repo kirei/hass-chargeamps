@@ -260,8 +260,10 @@ class ChargeampsHandler:
                 )
                 key = (charge_point_id, connector_status.connector_id)
                 self.hass.data[DOMAIN_DATA]["connector_status"][key] = connector_status
-                connector_settings = await self.client.get_chargepoint_connector_settings(
-                    charge_point_id, connector_status.connector_id
+                connector_settings = (
+                    await self.client.get_chargepoint_connector_settings(
+                        charge_point_id, connector_status.connector_id
+                    )
                 )
                 self.hass.data[DOMAIN_DATA]["connector_settings"][
                     key
@@ -336,7 +338,7 @@ class ChargeampsEntity(Entity):
         self._state = None
         self._attributes = {
             "charge_point_id": charge_point_id,
-            "connector_id": connector_id
+            "connector_id": connector_id,
         }
         self._interviewed = False
 
