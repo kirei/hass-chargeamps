@@ -329,7 +329,7 @@ class ChargeampsHandler:
 class ChargeampsEntity(Entity):
     """Chargeamps Entity class."""
 
-    def __init__(self, hass, name, charge_point_id, connector_id):
+    def __init__(self, hass, name, charge_point_id, connector_id = None):
         self.hass = hass
         self.charge_point_id = charge_point_id
         self.connector_id = connector_id
