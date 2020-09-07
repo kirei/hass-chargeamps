@@ -5,7 +5,7 @@ import logging
 from homeassistant.components.light import SUPPORT_BRIGHTNESS, LightEntity
 
 from . import ChargeampsEntity
-from .const import DOMAIN_DATA
+from .const import DOMAIN, DOMAIN_DATA
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -36,11 +36,16 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
     """Chargeamps Light class."""
 
     def __init__(self, hass, name, charge_point_id, light_type):
-        super().__init__(hass, name, charge_point_id, light_type)
+        super().__init__(hass, name, charge_point_id)
         self._light_type = light_type
         self._supported_features = 0
         if light_type == "dimmer":
             self._supported_features |= SUPPORT_BRIGHTNESS
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this sensor."""
+        return f"{DOMAIN}_{self.charge_point_id}_{self._light_type}"
 
     @property
     def supported_features(self):
