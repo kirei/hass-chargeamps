@@ -8,7 +8,7 @@ The module is developed by [Kirei AB](https://www.kirei.se) and is not supported
 
 ## Installation
 
-Installation via HACS by adding `https://github.com/kirei/hass-chargeamps` as a custom repository or by copying `custom_components/chargeamps`.
+Installation via HACS by adding `https://github.com/kirei/hass-chargeamps` as a custom repository or by copying `custom_components/chargeamps` into your Home Assistant configuration directory.
 
 ## Supported Hardware
 
