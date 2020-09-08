@@ -34,14 +34,25 @@ N.B. You need an API key from [Charge Amps Support](mailto:support@charge-amps.c
 
 Each Chargeamps chargepoint connector will be represented as a sensor with the current status of the connector as the state. Each connector will also be represented as a switch that can be used to enable/disable the connector.
 
+Lights (downlight/dimmer) appears are represented as lights.
 
 ### Additional sensor attributes
 
+- `charge_point_id`
+- `connector_id`
+- `total_consumption_kwh`
 - `total_consumption_kwh`
 
 ### Additional switch attributes
 
+- `charge_point_id`
+- `connector_id`
 - `max_current`
+
+### Additional light attributes
+
+- `connector_id`
+- `light_type`
 
 
 ## Services
