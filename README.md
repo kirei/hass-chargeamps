@@ -25,9 +25,9 @@ The component requires configuration via the Home Assistant configuration file. 
       password: SECRET_PASSWORD
       api_key: SECRET_API_KEY
 
-The default is to configure all charge points for the account. To only include some charge points a list of charge point IDs can be provided using the `chargepoints` parameter.
+The default is to configure all charge points for the account. To only include some charge points a list of charge point IDs can be provided using the `chargepoints` parameter (a list of strings).
 
-N.B. You need an API key from [Charge Amps Support](mailto:support@charge-amps.com) to use this component.
+N.B. You will need an API key from [Charge Amps Support](mailto:support@charge-amps.com) to use this component.
 
 
 ## Entities
