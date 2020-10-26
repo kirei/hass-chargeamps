@@ -19,7 +19,7 @@ async def async_setup_platform(
     for cp_id in handler.charge_point_ids:
         cp_info = handler.get_chargepoint_info(cp_id)
         cp_settings = handler.get_chargepoint_settings(cp_id)
-        _LOGGER.warning("%s", cp_settings)
+        _LOGGER.debug("%s", cp_settings)
         for _type in ("dimmer", "downlight"):
             lights.append(
                 ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type)
