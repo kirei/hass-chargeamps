@@ -4,6 +4,7 @@
 
 - Add `charge_point_id` attribute to all entities.
 - Add `connector_id` attribute to sensors and switches.
+- Fix log level in light
 
 ## 1.1.0 (2020-06-30)
 
