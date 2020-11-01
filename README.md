@@ -12,7 +12,7 @@ Installation via [HACS](https://hacs.xyz/) (recommended) or by copying `custom_c
 
 ## Supported Hardware
 
-- [Charge Amps AURA](https://charge-amps.com/products/charging-stations/aura/)
+- [AURA](https://charge-amps.com/products/charging-stations/aura/)
 - [HALO Wallbox](https://charge-amps.com/products/charging-stations/halo-wallbox/)
 
 
