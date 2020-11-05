@@ -1,5 +1,10 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.3.0 (develop)
+
+- Fix updating multiple chargepoints (incorrectly throttled)
+- Add `scan_interval` option (default 30 seconds, minimum 5 seconds).
+
 ## 1.2.0 (2020-11-01)
 
 - Add `charge_point_id` attribute to all entities.

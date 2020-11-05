@@ -5,7 +5,7 @@ import logging
 from homeassistant.const import DEVICE_CLASS_POWER, ENERGY_KILO_WATT_HOUR, POWER_WATT
 
 from . import ChargeampsEntity
-from .const import DOMAIN_DATA
+from .const import DOMAIN_DATA, SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 

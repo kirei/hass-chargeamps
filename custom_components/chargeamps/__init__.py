@@ -6,7 +6,7 @@ https://github.com/kirei/hass-chargeamps
 """
 
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Optional
 
 import homeassistant.helpers.config_validation as cv
@@ -18,7 +18,13 @@ from chargeamps.base import (
     ChargePointConnectorStatus,
 )
 from chargeamps.external import ChargeAmpsExternalClient
-from homeassistant.const import CONF_API_KEY, CONF_PASSWORD, CONF_URL, CONF_USERNAME
+from homeassistant.const import (
+    CONF_API_KEY,
+    CONF_PASSWORD,
+    CONF_SCAN_INTERVAL,
+    CONF_URL,
+    CONF_USERNAME,
+)
 from homeassistant.helpers import discovery
 from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
@@ -34,9 +40,10 @@ from .const import (
     PLATFORMS,
 )
 
-MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
-
 _LOGGER = logging.getLogger(__name__)
+
+DEFAULT_SCAN_INTERVAL = timedelta(seconds=30)
+MIN_SCAN_INTERVAL = timedelta(seconds=10)
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -48,6 +55,9 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_URL): cv.url,
                 vol.Optional(CONF_READONLY): cv.boolean,
                 vol.Optional(CONF_CHARGEPOINTS): vol.All(cv.ensure_list, [cv.string]),
+                vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): (
+                    vol.All(cv.time_period, vol.Clamp(min=MIN_SCAN_INTERVAL))
+                ),
             }
         )
     },
@@ -78,6 +88,7 @@ async def async_setup(hass, config):
     api_base_url = config[DOMAIN].get(CONF_URL)
     charge_point_ids = config[DOMAIN].get(CONF_CHARGEPOINTS)
     readonly = config[DOMAIN].get(CONF_READONLY, False)
+    scan_interval = config[DOMAIN].get(CONF_SCAN_INTERVAL)
 
     # Configure the client.
     client = ChargeAmpsExternalClient(
@@ -101,7 +112,7 @@ async def async_setup(hass, config):
             _LOGGER.info("Discovered chargepoint %s", cp.id)
             charge_point_ids.append(cp.id)
 
-    handler = ChargeampsHandler(hass, client, charge_point_ids, readonly)
+    handler = ChargeampsHandler(hass, client, charge_point_ids, readonly, scan_interval)
     hass.data[DOMAIN_DATA]["handler"] = handler
     hass.data[DOMAIN_DATA]["chargepoint_info"] = {}
     hass.data[DOMAIN_DATA]["chargepoint_status"] = {}
@@ -135,7 +146,7 @@ async def async_setup(hass, config):
 class ChargeampsHandler:
     """This class handle communication and stores the data."""
 
-    def __init__(self, hass, client, charge_point_ids, readonly):
+    def __init__(self, hass, client, charge_point_ids, readonly, scan_interval):
         """Initialize the class."""
         self.hass = hass
         self.client = client
@@ -143,10 +154,14 @@ class ChargeampsHandler:
         self.default_charge_point_id = charge_point_ids[0]
         self.default_connector_id = 1
         self.readonly = readonly
+        self.scan_interval = scan_interval
+        self.last_scanned = {id: datetime.fromtimestamp(0) for id in charge_point_ids}
         if self.readonly:
             _LOGGER.warning(
                 "Running in read-only mode, chargepoint will never be updated"
             )
+        _LOGGER.debug("Scan interval %s", self.scan_interval)
+        self.update_info = Throttle(self.scan_interval)(self.update_info)
 
     async def get_chargepoint_statuses(self):
         res = []
@@ -237,17 +252,27 @@ class ChargeampsHandler:
                 _LOGGER.debug("CONNECTOR INFO = %s", c)
                 _LOGGER.info("Update info for chargepoint %s", cp.id)
 
-    @Throttle(MIN_TIME_BETWEEN_UPDATES)
     async def update_data(self, charge_point_id):
         _LOGGER.debug("Update data for chargepoint %s", charge_point_id)
         await self._update_data(charge_point_id)
 
     async def force_update_data(self, charge_point_id):
         _LOGGER.debug("Force update data for chargepoint %s", charge_point_id)
-        await self._update_data(charge_point_id)
+        await self._update_data(charge_point_id, force=True)
 
-    async def _update_data(self, charge_point_id):
+    async def _update_data(self, charge_point_id, force: bool = False):
         """Update data."""
+        if (
+            not force
+            and datetime.now() - self.last_scanned[charge_point_id] < self.scan_interval
+        ):
+            _LOGGER.debug(
+                "Update throttled, last scan at %s", self.last_scanned[charge_point_id]
+            )
+            return
+        else:
+            _LOGGER.debug("Update passed, forced=%s", force)
+            self.last_scanned[charge_point_id] = datetime.now()
         try:
             status = await self.client.get_chargepoint_status(charge_point_id)
             _LOGGER.debug("STATUS = %s", status)
