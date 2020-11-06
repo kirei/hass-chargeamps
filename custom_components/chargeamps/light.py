@@ -5,7 +5,7 @@ import logging
 from homeassistant.components.light import SUPPORT_BRIGHTNESS, LightEntity
 
 from . import ChargeampsEntity
-from .const import DOMAIN, DOMAIN_DATA, SCAN_INTERVAL
+from .const import DOMAIN, DOMAIN_DATA, SCAN_INTERVAL  # noqa
 
 _LOGGER = logging.getLogger(__name__)
 
