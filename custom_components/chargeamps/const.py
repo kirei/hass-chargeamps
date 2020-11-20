@@ -1,8 +1,11 @@
 """Constants for Chargeamps."""
+
+from datetime import timedelta
+
 # Base component constants
 DOMAIN = "chargeamps"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "1.1.0"
+VERSION = "1.3.0"
 PLATFORMS = ["sensor", "switch", "light"]
 ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 
@@ -22,3 +25,6 @@ DEFAULT_NAME = DOMAIN
 
 # Possible dimmer values
 DIMMER_VALUES = ["off", "low", "medium", "high"]
+
+# Overall scan interval
+SCAN_INTERVAL = timedelta(seconds=10)
