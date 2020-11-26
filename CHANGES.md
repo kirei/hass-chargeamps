@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.4.0 (develop)
+
+- Update default icons for charger
+
 ## 1.3.0 (2020-11-20)
 
 - Fix updating multiple chargepoints (incorrectly throttled)

@@ -12,7 +12,7 @@ ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 # Icons
 DEFAULT_ICON = "mdi:car-electric"
 ICON_MAP = {
-    "Charger": "mdi:ev-station",
+    "Charger": "mdi:ev-plug-type2",
     "Schuko": "mdi:power-socket-de",
 }
 
