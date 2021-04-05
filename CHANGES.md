@@ -1,6 +1,6 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.4.1 (2021-04-05)  
+## 1.4.2 (2021-04-05)
 
 - Bump requirements
 
