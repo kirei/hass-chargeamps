@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.4.1 (2021-04-05)  
+
+- Bump requirements
+
 ## 1.4.0 (2021-02-26)
 
 - Update default icons for charger
