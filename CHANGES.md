@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.4.5 (2021-07-02)
+
+- Bump requirements for updated default API endpoint
+
 ## 1.4.3 (2021-05-09)
 
 - Add `iot_class` to manifest
