@@ -2,6 +2,11 @@
 
 import logging
 
+from homeassistant.components.sensor import (
+    STATE_CLASS_MEASUREMENT,
+    SensorEntity,
+    SensorEntityDescription,
+)
 from homeassistant.const import (
     DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_POWER,
@@ -56,7 +61,7 @@ async def async_setup_platform(
     async_add_entities(sensors, True)
 
 
-class ChargeampsSensor(ChargeampsEntity):
+class ChargeampsSensor(ChargeampsEntity, SensorEntity):
     """Chargeamps Sensor class."""
 
     def __init__(self, hass, name, charge_point_id, connector_id):
@@ -98,7 +103,7 @@ class ChargeampsSensor(ChargeampsEntity):
             await self.interview()
 
 
-class ChargeampsTotalEnergy(ChargeampsEntity):
+class ChargeampsTotalEnergy(ChargeampsEntity, SensorEntity):
     """Chargeamps Total Energy class."""
 
     def __init__(self, hass, name, charge_point_id):
@@ -123,6 +128,11 @@ class ChargeampsTotalEnergy(ChargeampsEntity):
         return DEVICE_CLASS_ENERGY
 
     @property
+    def state_class(self):
+        """Return the state class of the sensor."""
+        return STATE_CLASS_MEASUREMENT
+
+    @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
         return ENERGY_KILO_WATT_HOUR
@@ -132,7 +142,7 @@ class ChargeampsTotalEnergy(ChargeampsEntity):
         return utc_from_timestamp(0)
 
 
-class ChargeampsPowerSensor(ChargeampsEntity):
+class ChargeampsPowerSensor(ChargeampsEntity, SensorEntity):
     """Chargeamps Power Sensor class."""
 
     async def async_update(self):
@@ -181,6 +191,11 @@ class ChargeampsPowerSensor(ChargeampsEntity):
     def device_class(self):
         """Return the device class of the sensor."""
         return DEVICE_CLASS_POWER
+
+    @property
+    def state_class(self):
+        """Return the state class of the sensor."""
+        return STATE_CLASS_MEASUREMENT
 
     @property
     def unit_of_measurement(self):
