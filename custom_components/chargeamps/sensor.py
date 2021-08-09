@@ -108,6 +108,7 @@ class ChargeampsTotalEnergy(ChargeampsEntity, SensorEntity):
 
     def __init__(self, hass, name, charge_point_id):
         super().__init__(hass, name, charge_point_id, "total_energy")
+        del self._attributes["connector_id"]
 
     async def async_update(self):
         """Update the sensor."""
