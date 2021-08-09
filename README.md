@@ -41,7 +41,6 @@ Lights (downlight/dimmer) appears are represented as lights.
 - `charge_point_id`
 - `connector_id`
 - `total_consumption_kwh`
-- `total_consumption_kwh`
 
 ### Additional switch attributes
 
