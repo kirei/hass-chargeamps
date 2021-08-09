@@ -2,7 +2,13 @@
 
 import logging
 
-from homeassistant.const import DEVICE_CLASS_POWER, ENERGY_KILO_WATT_HOUR, POWER_WATT
+from homeassistant.const import (
+    DEVICE_CLASS_ENERGY,
+    DEVICE_CLASS_POWER,
+    ENERGY_KILO_WATT_HOUR,
+    POWER_WATT,
+)
+from homeassistant.util.dt import utc_from_timestamp
 
 from . import ChargeampsEntity
 from .const import DOMAIN_DATA, SCAN_INTERVAL  # noqa
@@ -112,9 +118,18 @@ class ChargeampsTotalEnergy(ChargeampsEntity):
         )
 
     @property
+    def device_class(self):
+        """Return the device class of the sensor."""
+        return DEVICE_CLASS_ENERGY
+
+    @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
         return ENERGY_KILO_WATT_HOUR
+
+    @property
+    def last_reset(self):
+        return utc_from_timestamp(0)
 
 
 class ChargeampsPowerSensor(ChargeampsEntity):

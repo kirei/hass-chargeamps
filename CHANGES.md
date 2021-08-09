@@ -1,8 +1,8 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.4.4 (2021-07-02)
+## Develop
 
-- Bump requirements for updated default API endpoint
+- Add more properties to total energy sensor
 
 ## 1.4.3 (2021-05-09)
 
