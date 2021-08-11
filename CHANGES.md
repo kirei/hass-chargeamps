@@ -1,8 +1,8 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.5.0.dev1 (2021-08-XX)
+## 1.5.0 (2021-08-11)
 
-- Add more properties to total energy sensor
+- Add more properties to total energy sensor in order to support long term statistics
 - Remove bogus "Connector ID" attribute from total energy sensor
 
 ## 1.4.4 (2021-07-02)
