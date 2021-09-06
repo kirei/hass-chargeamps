@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.5.1 (2021-09-06)
+
+- Update state class for `ChargeampsTotalEnergy`
+
 ## 1.5.0 (2021-08-11)
 
 - Add more properties to total energy sensor in order to support long term statistics
