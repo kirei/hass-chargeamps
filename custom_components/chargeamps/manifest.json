@@ -13,6 +13,7 @@
 		"@kirei"
 	],
 	"requirements": [
-		"chargeamps==1.4.3"
+		"chargeamps==1.4.3",
+		"homeassistant>=2021.9.0"
 	]
 }
