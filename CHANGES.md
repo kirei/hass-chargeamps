@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.5.2 (2021-10-07)
+
+- Bump `python-chargeamps` requirement
+
 ## 1.5.1 (2021-09-06)
 
 - Update state class for `ChargeampsTotalEnergy`
