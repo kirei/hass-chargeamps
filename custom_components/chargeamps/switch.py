@@ -41,6 +41,7 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
     def __init__(self, hass, name, charge_point_id, connector_id):
         super().__init__(hass, name, charge_point_id, connector_id)
         self._current_power_w = 0
+        self._status = None
 
     async def async_update(self):
         """Update the switch."""
