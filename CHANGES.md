@@ -3,6 +3,7 @@
 ## 1.6.0 (develop)
 
 - Add device info
+- Use `extra_state_attributes` instead of `device_state_attributes`
 
 ## 1.5.2 (2021-10-07)
 
