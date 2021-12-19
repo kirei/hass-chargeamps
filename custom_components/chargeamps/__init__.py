@@ -26,18 +26,18 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 from homeassistant.helpers import discovery
-from homeassistant.helpers.entity import Entity, DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.util import Throttle
 
 from .const import (
     CONF_CHARGEPOINTS,
     CONF_READONLY,
+    CONFIGURATION_URL,
     DEFAULT_ICON,
     DIMMER_VALUES,
     DOMAIN,
     DOMAIN_DATA,
     ICON_MAP,
-    CONFIGURATION_URL,
     MANUFACTURER,
     PLATFORMS,
 )
