@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.6.0 (develop)
+
+- Add device info
+
 ## 1.5.2 (2021-10-07)
 
 - Bump `python-chargeamps` requirement

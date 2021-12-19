@@ -26,7 +26,7 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 from homeassistant.helpers import discovery
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity import Entity, DeviceInfo
 from homeassistant.util import Throttle
 
 from .const import (
@@ -37,6 +37,8 @@ from .const import (
     DOMAIN,
     DOMAIN_DATA,
     ICON_MAP,
+    CONFIGURATION_URL,
+    MANUFACTURER,
     PLATFORMS,
 )
 
@@ -366,6 +368,17 @@ class ChargeampsEntity(Entity):
         }
         if connector_id is not None:
             self._attributes["connector_id"] = connector_id
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device information about this entity."""
+        return DeviceInfo(
+            name=self.name,
+            manufacturer=MANUFACTURER,
+            model=self._attributes.get("chargepoint_type"),
+            identifiers={(DOMAIN, self.charge_point_id)},
+            configuration_url=CONFIGURATION_URL,
+        )
 
     @property
     def name(self):
