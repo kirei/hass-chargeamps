@@ -1,6 +1,6 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.6.0 (develop)
+## 1.6.0 (2021-12-19)
 
 - Add device info
 - Use `extra_state_attributes` instead of `device_state_attributes`
