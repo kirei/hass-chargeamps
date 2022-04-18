@@ -71,6 +71,8 @@ _SERVICE_MAP = {
     "set_max_current": "async_set_max_current",
     "enable": "async_enable_ev",
     "disable": "async_disable_ev",
+    "cable_lock": "async_cable_lock",
+    "cable_unlock": "async_cable_unlock",
 }
 
 
@@ -243,6 +245,18 @@ class ChargeampsHandler:
             await self.client.set_chargepoint_connector_settings(settings)
         await self.force_update_data(charge_point_id)
 
+    async def set_connector_cable_lock(self, charge_point_id, connector_id, cable_lock):
+        settings = await self.client.get_chargepoint_connector_settings(
+            charge_point_id, connector_id
+        )
+        settings.cable_lock = cable_lock
+        if self.readonly:
+            _LOGGER.info("NOT setting chargepoint connector: %s", settings)
+        else:
+            _LOGGER.info("Setting chargepoint connector: %s", settings)
+            await self.client.set_chargepoint_connector_settings(settings)
+        await self.force_update_data(charge_point_id)
+
     async def update_info(self):
         for cp in await self.client.get_chargepoints():
             if cp.id in self.charge_point_ids:
@@ -351,6 +365,18 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_mode(charge_point_id, connector_id, "Off")
+
+    async def async_cable_lock(self, param):
+        """Lock cable in async way."""
+        charge_point_id = param.get("chargepoint", self.default_charge_point_id)
+        connector_id = param.get("connector", self.default_connector_id)
+        await self.set_connector_cable_lock(charge_point_id, connector_id, True)
+
+    async def async_cable_unlock(self, param=None):
+        """Unlock cable in async way."""
+        charge_point_id = param.get("chargepoint", self.default_charge_point_id)
+        connector_id = param.get("connector", self.default_connector_id)
+        await self.set_connector_cable_lock(charge_point_id, connector_id, False)
 
 
 class ChargeampsEntity(Entity):

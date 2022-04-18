@@ -67,6 +67,7 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
             self._status = False
         else:
             self._status = None
+        self._attributes["cable_lock"] = settings.cable_lock
         self._attributes["max_current"] = (
             round(settings.max_current) if settings.max_current else None
         )

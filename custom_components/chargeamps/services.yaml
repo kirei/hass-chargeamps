@@ -59,3 +59,27 @@ disable:
       description: >
         Connector ID. Default is the first connector.
       example: 1
+
+cable_lock:
+  description: Lock cable.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1
+
+cable_unlock:
+  description: Unlock cable.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1

@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.7.0 (develop)
+
+- Add support for cable lock/unlock (Aura only) via service call.
+
 ## 1.6.1 (2022-03-06)
 
 - Bump `python-chargeamps` requirement
