@@ -1,6 +1,6 @@
 # Change log for Charge Amps for Home Assistant
 
-## 1.7.0 (develop)
+## 1.7.0 (2022-04-18)
 
 - Add support for cable lock/unlock (Aura only) via service call.
 
