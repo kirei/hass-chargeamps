@@ -3,16 +3,11 @@
 import logging
 
 from homeassistant.components.sensor import (
-    STATE_CLASS_MEASUREMENT,
-    STATE_CLASS_TOTAL_INCREASING,
+    SensorDeviceClass,
     SensorEntity,
+    SensorStateClass,
 )
-from homeassistant.const import (
-    DEVICE_CLASS_ENERGY,
-    DEVICE_CLASS_POWER,
-    ENERGY_KILO_WATT_HOUR,
-    POWER_WATT,
-)
+from homeassistant.const import UnitOfEnergy, UnitOfPower
 
 from . import ChargeampsEntity
 from .const import DOMAIN_DATA, SCAN_INTERVAL  # noqa
@@ -125,17 +120,17 @@ class ChargeampsTotalEnergy(ChargeampsEntity, SensorEntity):
     @property
     def device_class(self):
         """Return the device class of the sensor."""
-        return DEVICE_CLASS_ENERGY
+        return SensorDeviceClass.ENERGY
 
     @property
     def state_class(self):
         """Return the state class of the sensor."""
-        return STATE_CLASS_TOTAL_INCREASING
+        return SensorStateClass.TOTAL_INCREASING
 
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return ENERGY_KILO_WATT_HOUR
+        return UnitOfEnergy.WATT_HOUR
 
 
 class ChargeampsPowerSensor(ChargeampsEntity, SensorEntity):
@@ -186,14 +181,14 @@ class ChargeampsPowerSensor(ChargeampsEntity, SensorEntity):
     @property
     def device_class(self):
         """Return the device class of the sensor."""
-        return DEVICE_CLASS_POWER
+        return SensorDeviceClass.POWER
 
     @property
     def state_class(self):
         """Return the state class of the sensor."""
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return POWER_WATT
+        return UnitOfPower.WATT
