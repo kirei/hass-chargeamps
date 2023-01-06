@@ -130,7 +130,7 @@ class ChargeampsTotalEnergy(ChargeampsEntity, SensorEntity):
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement."""
-        return UnitOfEnergy.WATT_HOUR
+        return UnitOfEnergy.KILO_WATT_HOUR
 
 
 class ChargeampsPowerSensor(ChargeampsEntity, SensorEntity):

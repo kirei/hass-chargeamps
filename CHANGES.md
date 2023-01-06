@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.8.1 (2023-01-06)
+
+- Fix bug sensor reporting data as `wH` instead of intended `kWh`
+
 ## 1.8.0 (2023-01-03)
 
 - Use modern Home Assistant enums, reported by @frenck
