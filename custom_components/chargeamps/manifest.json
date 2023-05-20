@@ -14,6 +14,7 @@
 	],
 	"requirements": [
 		"chargeamps==1.5.1",
+		"dataclasses-json==0.5.7",
 		"homeassistant>=2022.11.0"
 	]
 }
