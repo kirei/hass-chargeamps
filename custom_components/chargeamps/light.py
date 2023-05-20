@@ -79,7 +79,6 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
         )
 
     async def async_turn_off(self):
-
         await self.handler.async_set_light(
             {
                 "chargepoint": self.charge_point_id,
