@@ -1,7 +1,7 @@
 {
 	"domain": "chargeamps",
 	"name": "Chargeamps",
-	"version": "1.8.3",
+	"version": "1.8.4",
 	"documentation": "https://github.com/kirei/hass-chargeamps",
 	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues",
 	"dependencies": [
@@ -14,7 +14,7 @@
 	],
 	"requirements": [
 		"chargeamps==1.5.1",
-		"dataclasses-json==0.5.14",
+		"dataclasses-json>=0.5.14",
 		"homeassistant>=2022.11.0"
 	]
 }
