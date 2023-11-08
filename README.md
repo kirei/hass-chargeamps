@@ -1,10 +1,10 @@
 # Charge Amps for Home Assistant
 
-This repository contains a [Charge Amps](https://charge-amps.com/) component for [Home Assistant](https://www.home-assistant.io/).
+This repository contains a [Charge Amps](https://www.chargeamps.com/) component for [Home Assistant](https://www.home-assistant.io/).
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs) [![travis_ci_badge](https://travis-ci.org/kirei/python-chargeamps.svg?branch=master)](https://travis-ci.org/kirei/python-chargeamps)
 
-The module is developed by [Kirei AB](https://www.kirei.se) and is not supported by [Charge Amps AB](https://charge-amps.com).
+The module is developed by [Kirei AB](https://www.kirei.se) and is not supported by [Charge Amps AB](https://chargeamps.com).
 
 ## Installation
 
@@ -12,8 +12,9 @@ Installation via [HACS](https://hacs.xyz/) (recommended) or by copying `custom_c
 
 ## Supported Hardware
 
-- [AURA](https://charge-amps.com/products/charging-stations/aura/)
-- [HALO Wallbox](https://charge-amps.com/products/charging-stations/halo-wallbox/)
+- [Aura](https://www.chargeamps.com/product/charge-amps-halo/)
+- [Dawn](https://www.chargeamps.com/product/charge-amps-dawn/)
+- [Halo](https://www.chargeamps.com/product/charge-amps-halo/)
 
 
 ## Configuration
