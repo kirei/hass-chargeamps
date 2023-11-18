@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.8.6 (2023-11-08)
+
+- Update dependencies
+
 ## 1.8.5 (2023-11-06)
 
 - Update dependencies
