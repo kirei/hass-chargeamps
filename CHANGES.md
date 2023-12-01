@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.9.1 (2023-12-01)
+
+- Update dependencies
+
 ## 1.9.0 (2023-12-01)
 
 - Add Remote Start/Stop using RFID
