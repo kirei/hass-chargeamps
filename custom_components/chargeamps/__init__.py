@@ -390,7 +390,7 @@ class ChargeampsHandler:
     async def async_remote_stop_rfid(self, charge_point_id, connector_id, rfi_length, rfid_format, rfid, external_transaction_id):
         """Remote stop RFID in async way."""
         await self.client.remote_stop(
-            charge_point_id, connector_id, StartAuth(rfi_length, rfid_format, rfid, external_transaction_id)
+            charge_point_id, connector_id
         )
 
 class ChargeampsEntity(Entity):
