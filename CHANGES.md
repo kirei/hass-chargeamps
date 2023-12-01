@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.9.2 (2023-12-01)
+
+- More tweeks for RFID start
+
 ## 1.9.1 (2023-12-01)
 
 - Update dependencies

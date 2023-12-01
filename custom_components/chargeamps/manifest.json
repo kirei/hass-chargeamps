@@ -1,7 +1,7 @@
 {
 	"domain": "chargeamps",
 	"name": "Chargeamps",
-	"version": "1.9.0",
+	"version": "1.9.2",
 	"documentation": "https://github.com/kirei/hass-chargeamps",
 	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues",
 	"dependencies": [
