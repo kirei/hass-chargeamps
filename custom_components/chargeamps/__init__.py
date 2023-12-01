@@ -385,7 +385,7 @@ class ChargeampsHandler:
         self,
         charge_point_id,
         connector_id,
-        rfi_length,
+        rfid_length,
         rfid_format,
         rfid,
         external_transaction_id,
@@ -394,7 +394,7 @@ class ChargeampsHandler:
         await self.client.remote_start(
             charge_point_id,
             connector_id,
-            StartAuth(rfi_length, rfid_format, rfid, external_transaction_id),
+            StartAuth(rfid_length, rfid_format, rfid, external_transaction_id),
         )
 
     async def async_remote_stop(self, charge_point_id, connector_id):
