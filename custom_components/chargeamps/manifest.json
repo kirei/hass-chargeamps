@@ -13,7 +13,7 @@
 		"@kirei"
 	],
 	"requirements": [
-		"chargeamps==1.5.2",
+		"chargeamps==1.6.0",
 		"dataclasses-json>=0.5.2",
 		"homeassistant>=2022.11.0"
 	]

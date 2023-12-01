@@ -40,7 +40,7 @@ from .const import (
     DOMAIN_DATA,
     ICON_MAP,
     MANUFACTURER,
-    PLATFORMS
+    PLATFORMS,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -381,17 +381,26 @@ class ChargeampsHandler:
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_cable_lock(charge_point_id, connector_id, False)
 
-    async def async_remote_start_rfid(self, charge_point_id, connector_id, rfi_length, rfid_format, rfid, external_transaction_id):
+    async def async_remote_start(
+        self,
+        charge_point_id,
+        connector_id,
+        rfi_length,
+        rfid_format,
+        rfid,
+        external_transaction_id,
+    ):
         """Remote start RFID in async way."""
         await self.client.remote_start(
-            charge_point_id, connector_id, StartAuth(rfi_length, rfid_format, rfid, external_transaction_id)
+            charge_point_id,
+            connector_id,
+            StartAuth(rfi_length, rfid_format, rfid, external_transaction_id),
         )
 
-    async def async_remote_stop_rfid(self, charge_point_id, connector_id, rfi_length, rfid_format, rfid, external_transaction_id):
+    async def async_remote_stop(self, charge_point_id, connector_id):
         """Remote stop RFID in async way."""
-        await self.client.remote_stop(
-            charge_point_id, connector_id
-        )
+        await self.client.remote_stop(charge_point_id, connector_id)
+
 
 class ChargeampsEntity(Entity):
     """Chargeamps Entity class."""
