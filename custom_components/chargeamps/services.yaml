@@ -83,3 +83,15 @@ cable_unlock:
       description: >
         Connector ID. Default is the first connector.
       example: 1
+
+remote_start:
+  description: Remote start using RFID.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1
