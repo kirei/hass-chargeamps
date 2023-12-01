@@ -16,7 +16,7 @@ from chargeamps.base import (
     ChargePointConnector,
     ChargePointConnectorSettings,
     ChargePointConnectorStatus,
-    StartAuth
+    StartAuth,
 )
 from chargeamps.external import ChargeAmpsExternalClient
 from homeassistant.const import (
