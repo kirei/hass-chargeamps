@@ -381,24 +381,26 @@ class ChargeampsHandler:
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_cable_lock(charge_point_id, connector_id, False)
 
-    async def async_remote_start(
-        self,
-        charge_point_id,
-        connector_id,
-        rfid_length,
-        rfid_format,
-        rfid,
-        external_transaction_id,
-    ):
+    async def async_remote_start(self, param):
         """Remote start RFID in async way."""
+
+        charge_point_id = param.get("chargepoint", self.default_charge_point_id)
+        connector_id = param.get("connector", self.default_connector_id)
+        rfid_length = param.get("rfid_length", 4)
+        rfid_format = param.get("rfid_format", "Dec")
+        rfid = param.get("rfid")
+        external_transaction_id = param.get("external_transaction_id", 0)
+
         await self.client.remote_start(
             charge_point_id,
             connector_id,
             StartAuth(rfid_length, rfid_format, rfid, external_transaction_id),
         )
 
-    async def async_remote_stop(self, charge_point_id, connector_id):
+    async def async_remote_stop(self, param):
         """Remote stop RFID in async way."""
+        charge_point_id = param.get("chargepoint", self.default_charge_point_id)
+        connector_id = param.get("connector", self.default_connector_id)
         await self.client.remote_stop(charge_point_id, connector_id)
 
 
