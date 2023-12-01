@@ -95,3 +95,19 @@ remote_start:
       description: >
         Connector ID. Default is the first connector.
       example: 1
+    rfidLength:
+      description: >
+        The number of bytes the RFID tag used
+      example: 4
+    rfidFormat:
+      description: >
+        Hex, Dex or ReverseDec
+      example: Dec
+    rfid:
+      description: >
+        The RFID Tag
+      example: 111111111
+    externalTransactionId:
+      description: >
+        Determines which external transaction (if any) to use
+      example: 0
