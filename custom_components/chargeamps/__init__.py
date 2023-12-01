@@ -381,16 +381,16 @@ class ChargeampsHandler:
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_cable_lock(charge_point_id, connector_id, False)
 
-    async def async_remote_start_rfid(self, charge_point_id, connector_id, rfidLength, rfidFormat, rfid, externalTransactionId):
+    async def async_remote_start_rfid(self, charge_point_id, connector_id, rfi_length, rfid_format, rfid, external_transaction_id):
         """Remote start RFID in async way."""
         await self.client.remote_start(
-            charge_point_id, connector_id, StartAuth(rfidLength, rfidFormat, rfid, externalTransactionId)
+            charge_point_id, connector_id, StartAuth(rfi_length, rfid_format, rfid, external_transaction_id)
         )
 
-    async def async_remote_stop_rfid(self, charge_point_id, connector_id, rfidLength, rfidFormat, rfid, externalTransactionId):
-        """Remote start RFID in async way."""
+    async def async_remote_stop_rfid(self, charge_point_id, connector_id, rfi_length, rfid_format, rfid, external_transaction_id):
+        """Remote stop RFID in async way."""
         await self.client.remote_stop(
-            charge_point_id, connector_id, StartAuth(rfidLength, rfidFormat, rfid, externalTransactionId)
+            charge_point_id, connector_id, StartAuth(rfi_length, rfid_format, rfid, external_transaction_id)
         )
 
 class ChargeampsEntity(Entity):
