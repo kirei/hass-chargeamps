@@ -83,3 +83,43 @@ cable_unlock:
       description: >
         Connector ID. Default is the first connector.
       example: 1
+
+remote_start:
+  description: Remote start using RFID.
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1
+    rfid_length:
+      description: >
+        The number of bytes the RFID tag used
+      example: 4
+    rfid_format:
+      description: >
+        Hex, Dex or ReverseDec
+      example: Dec
+    rfid:
+      description: >
+        The RFID Tag
+      example: 111111111
+    external_transaction_id:
+      description: >
+        Determines which external transaction (if any) to use
+      example: 0
+
+remote_stop:
+  description: Remote stop (Only when RFID lock is turned om)
+  fields:
+    chargepoint:
+      description: >
+        Charge point ID. Default is the first configured or found charge point.
+      example: "000000000000"
+    connector:
+      description: >
+        Connector ID. Default is the first connector.
+      example: 1

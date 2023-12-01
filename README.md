@@ -63,3 +63,5 @@ The following services are implemented by the component:
 - `set_max_current` -- set max current for connector
 - `enable` -- enable connector
 - `disable` -- disable connector
+- `remote_start` -- start a charging sessions when RFID lock is enabled
+- `remote_stop` -- stop charging sessions when RFID lock is enabled

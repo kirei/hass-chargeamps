@@ -16,6 +16,7 @@ from chargeamps.base import (
     ChargePointConnector,
     ChargePointConnectorSettings,
     ChargePointConnectorStatus,
+    StartAuth,
 )
 from chargeamps.external import ChargeAmpsExternalClient
 from homeassistant.const import (
@@ -73,6 +74,8 @@ _SERVICE_MAP = {
     "disable": "async_disable_ev",
     "cable_lock": "async_cable_lock",
     "cable_unlock": "async_cable_unlock",
+    "remote_start": "async_remote_start",
+    "remote_stop": "async_remote_stop",
 }
 
 
@@ -377,6 +380,26 @@ class ChargeampsHandler:
         charge_point_id = param.get("chargepoint", self.default_charge_point_id)
         connector_id = param.get("connector", self.default_connector_id)
         await self.set_connector_cable_lock(charge_point_id, connector_id, False)
+
+    async def async_remote_start(
+        self,
+        charge_point_id,
+        connector_id,
+        rfid_length,
+        rfid_format,
+        rfid,
+        external_transaction_id,
+    ):
+        """Remote start RFID in async way."""
+        await self.client.remote_start(
+            charge_point_id,
+            connector_id,
+            StartAuth(rfid_length, rfid_format, rfid, external_transaction_id),
+        )
+
+    async def async_remote_stop(self, charge_point_id, connector_id):
+        """Remote stop RFID in async way."""
+        await self.client.remote_stop(charge_point_id, connector_id)
 
 
 class ChargeampsEntity(Entity):
