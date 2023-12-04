@@ -68,9 +68,7 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
         else:
             self._status = None
         self._attributes["cable_lock"] = settings.cable_lock
-        self._attributes["max_current"] = (
-            round(settings.max_current) if settings.max_current else None
-        )
+        self._attributes["max_current"] = round(settings.max_current or 0)
         measurements = self.handler.get_connector_measurements(
             self.charge_point_id, self.connector_id
         )

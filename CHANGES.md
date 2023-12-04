@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.9.3 (2023-12-04)
+
+- Show zero max current correctly
+
 ## 1.9.2 (2023-12-01)
 
 - More tweeks for RFID start
