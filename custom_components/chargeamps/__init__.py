@@ -16,6 +16,7 @@ from chargeamps.base import (
     ChargePointConnector,
     ChargePointConnectorSettings,
     ChargePointConnectorStatus,
+    ChargePointStatus,
     StartAuth,
 )
 from chargeamps.external import ChargeAmpsExternalClient
@@ -183,6 +184,9 @@ class ChargeampsHandler:
 
     def get_chargepoint_info(self, charge_point_id) -> ChargePoint:
         return self.hass.data[DOMAIN_DATA]["chargepoint_info"].get(charge_point_id)
+
+    def get_chargepoint_status(self, charge_point_id) -> ChargePointStatus:
+        return self.hass.data[DOMAIN_DATA]["chargepoint_status"].get(charge_point_id)
 
     def get_chargepoint_settings(self, charge_point_id):
         return self.hass.data[DOMAIN_DATA]["chargepoint_settings"].get(charge_point_id)
