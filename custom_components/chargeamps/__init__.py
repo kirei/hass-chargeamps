@@ -309,9 +309,9 @@ class ChargeampsHandler:
                         charge_point_id, connector_status.connector_id
                     )
                 )
-                self.hass.data[DOMAIN_DATA]["connector_settings"][
-                    key
-                ] = connector_settings
+                self.hass.data[DOMAIN_DATA]["connector_settings"][key] = (
+                    connector_settings
+                )
             total_energy = sum(
                 [
                     v.total_consumption_kwh
@@ -323,13 +323,13 @@ class ChargeampsHandler:
                 charge_point_id,
                 total_energy,
             )
-            self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"][
-                charge_point_id
-            ] = round(total_energy, 2)
+            self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"][charge_point_id] = (
+                round(total_energy, 2)
+            )
             settings = await self.client.get_chargepoint_settings(charge_point_id)
-            self.hass.data[DOMAIN_DATA]["chargepoint_settings"][
-                charge_point_id
-            ] = settings
+            self.hass.data[DOMAIN_DATA]["chargepoint_settings"][charge_point_id] = (
+                settings
+            )
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 

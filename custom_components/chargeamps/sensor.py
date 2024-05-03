@@ -15,9 +15,7 @@ from .const import DOMAIN_DATA, SCAN_INTERVAL  # noqa
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(
-    hass, config, async_add_entities, discovery_info=None
-):  # pylint: disable=unused-argument
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):  # pylint: disable=unused-argument
     """Setup sensor platform."""
     sensors = []
     handler = hass.data[DOMAIN_DATA]["handler"]
