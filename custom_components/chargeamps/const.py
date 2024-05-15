@@ -30,3 +30,6 @@ DIMMER_VALUES = ["off", "low", "medium", "high"]
 
 # Overall scan interval
 SCAN_INTERVAL = timedelta(seconds=10)
+
+# Chargepoint online status
+CHARGEPOINT_ONLINE = "Online"

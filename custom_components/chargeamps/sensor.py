@@ -7,10 +7,10 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
-from homeassistant.const import UnitOfEnergy, UnitOfPower
+from homeassistant.const import UnitOfEnergy, UnitOfPower, STATE_UNAVAILABLE
 
 from . import ChargeampsEntity
-from .const import DOMAIN_DATA, SCAN_INTERVAL  # noqa
+from .const import DOMAIN_DATA, SCAN_INTERVAL, CHARGEPOINT_ONLINE  # noqa
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,12 +82,16 @@ class ChargeampsSensor(ChargeampsEntity, SensorEntity):
             self.charge_point_id,
             self.connector_id,
         )
+        cp_status = self.handler.get_chargepoint_status(self.charge_point_id)
         status = self.handler.get_connector_status(
             self.charge_point_id, self.connector_id
         )
         if status is None:
             return
-        self._state = status.status
+        if cp_status.status != CHARGEPOINT_ONLINE:
+            self._state = STATE_UNAVAILABLE
+        else:
+            self._state = status.status
         self._attributes["total_consumption_kwh"] = round(
             status.total_consumption_kwh, 3
         )
