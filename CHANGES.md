@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.9.4 (2024-05-03)
+
+- Update light color modes
+
 ## 1.9.3 (2023-12-04)
 
 - Show zero max current correctly

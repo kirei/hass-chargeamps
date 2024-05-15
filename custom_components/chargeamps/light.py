@@ -2,7 +2,11 @@
 
 import logging
 
-from homeassistant.components.light import SUPPORT_BRIGHTNESS, LightEntity
+from homeassistant.components.light import (
+    ColorMode,
+    LightEntity,
+    filter_supported_color_modes,
+)
 
 from . import ChargeampsEntity
 from .const import DOMAIN, DOMAIN_DATA, SCAN_INTERVAL  # noqa
@@ -36,20 +40,20 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
     def __init__(self, hass, name, charge_point_id, light_type):
         super().__init__(hass, name, charge_point_id)
         self._light_type = light_type
-        self._supported_features = 0
-        if light_type == "dimmer":
-            self._supported_features |= SUPPORT_BRIGHTNESS
         self._attributes["light_type"] = light_type
+        supported_color_modes = set()
+        if light_type == "dimmer":
+            supported_color_modes.add(ColorMode.BRIGHTNESS)
+        else:
+            supported_color_modes.add(ColorMode.ONOFF)
+        supported_color_modes = filter_supported_color_modes(supported_color_modes)
+        self._attr_supported_color_modes = supported_color_modes
+        self._attr_color_mode = next(iter(self._attr_supported_color_modes))
 
     @property
     def unique_id(self):
         """Return a unique ID to use for this sensor."""
         return f"{DOMAIN}_{self.charge_point_id}_{self._light_type}"
-
-    @property
-    def supported_features(self):
-        """Return supported features."""
-        return self._supported_features
 
     @property
     def is_on(self):
