@@ -23,9 +23,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         cp_settings = handler.get_chargepoint_settings(cp_id)
         _LOGGER.debug("%s", cp_settings)
         for _type in ("dimmer", "downlight"):
-            lights.append(
-                ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type)
-            )
+            lights.append(ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type))
             _LOGGER.info(
                 "Adding chargepoint %s light %s",
                 cp_id,
@@ -76,9 +74,7 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
                 brightness = "high"
         else:
             brightness = True if self._light_type == "downlight" else "high"
-        await self.handler.async_set_light(
-            {"chargepoint": self.charge_point_id, self._light_type: brightness}
-        )
+        await self.handler.async_set_light({"chargepoint": self.charge_point_id, self._light_type: brightness})
 
     async def async_turn_off(self):
         await self.handler.async_set_light(
@@ -92,6 +88,4 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
     def brightness(self):
         """Return the brightness of this light between 0..255."""
         brightness = {"Off": 0, "Low": 85, "Medium": 170, "High": 255}
-        return brightness.get(
-            self.handler.get_chargepoint_settings(self.charge_point_id).dimmer
-        )
+        return brightness.get(self.handler.get_chargepoint_settings(self.charge_point_id).dimmer)

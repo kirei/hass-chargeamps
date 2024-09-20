@@ -54,9 +54,7 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
             self.charge_point_id,
             self.connector_id,
         )
-        settings = self.handler.get_connector_settings(
-            self.charge_point_id, self.connector_id
-        )
+        settings = self.handler.get_connector_settings(self.charge_point_id, self.connector_id)
         if settings is None:
             return
         if settings.mode == "On":
@@ -67,27 +65,19 @@ class ChargeampsSwitch(SwitchEntity, ChargeampsEntity):
             self._status = None
         self._attributes["cable_lock"] = settings.cable_lock
         self._attributes["max_current"] = round(settings.max_current or 0)
-        measurements = self.handler.get_connector_measurements(
-            self.charge_point_id, self.connector_id
-        )
+        measurements = self.handler.get_connector_measurements(self.charge_point_id, self.connector_id)
         if measurements:
-            self._current_power_w = round(
-                sum([phase.current * phase.voltage for phase in measurements]), 0
-            )
+            self._current_power_w = round(sum([phase.current * phase.voltage for phase in measurements]), 0)
         else:
             self._current_power_w = 0
 
     async def async_turn_on(self, **kwargs):  # pylint: disable=unused-argument
         """Turn on the switch."""
-        await self.handler.set_connector_mode(
-            self.charge_point_id, self.connector_id, "On"
-        )
+        await self.handler.set_connector_mode(self.charge_point_id, self.connector_id, "On")
 
     async def async_turn_off(self, **kwargs):  # pylint: disable=unused-argument
         """Turn off the switch."""
-        await self.handler.set_connector_mode(
-            self.charge_point_id, self.connector_id, "Off"
-        )
+        await self.handler.set_connector_mode(self.charge_point_id, self.connector_id, "Off")
 
     @property
     def is_on(self):

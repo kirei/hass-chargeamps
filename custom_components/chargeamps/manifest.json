@@ -10,9 +10,8 @@
 	"iot_class": "cloud_polling",
 	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues",
 	"requirements": [
-		"chargeamps==1.8.0",
-		"dataclasses-json>=0.5.2",
-		"homeassistant>=2022.11.0"
+		"homeassistant>=2024.1.0",
+		"pydantic>=2.9.2"
 	],
-	"version": "1.9.4"
+	"version": "1.11.0"
 }

@@ -7,10 +7,10 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
-from homeassistant.const import UnitOfEnergy, UnitOfPower, STATE_UNAVAILABLE
+from homeassistant.const import STATE_UNAVAILABLE, UnitOfEnergy, UnitOfPower
 
 from . import ChargeampsEntity
-from .const import DOMAIN_DATA, SCAN_INTERVAL, CHARGEPOINT_ONLINE  # noqa
+from .const import CHARGEPOINT_ONLINE, DOMAIN_DATA, SCAN_INTERVAL  # noqa
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -62,9 +62,7 @@ class ChargeampsSensor(ChargeampsEntity, SensorEntity):
 
     async def interview(self):
         chargepoint_info = self.handler.get_chargepoint_info(self.charge_point_id)
-        connector_info = self.handler.get_connector_info(
-            self.charge_point_id, self.connector_id
-        )
+        connector_info = self.handler.get_connector_info(self.charge_point_id, self.connector_id)
         self._attributes["chargepoint_type"] = chargepoint_info.type
         self._attributes["connector_type"] = connector_info.type
         self._interviewed = True
@@ -83,18 +81,14 @@ class ChargeampsSensor(ChargeampsEntity, SensorEntity):
             self.connector_id,
         )
         cp_status = self.handler.get_chargepoint_status(self.charge_point_id)
-        status = self.handler.get_connector_status(
-            self.charge_point_id, self.connector_id
-        )
+        status = self.handler.get_connector_status(self.charge_point_id, self.connector_id)
         if status is None:
             return
         if cp_status.status != CHARGEPOINT_ONLINE:
             self._state = STATE_UNAVAILABLE
         else:
             self._state = status.status
-        self._attributes["total_consumption_kwh"] = round(
-            status.total_consumption_kwh, 3
-        )
+        self._attributes["total_consumption_kwh"] = round(status.total_consumption_kwh, 3)
         if not self._interviewed:
             await self.interview()
 
@@ -151,23 +145,13 @@ class ChargeampsPowerSensor(ChargeampsEntity, SensorEntity):
             self.charge_point_id,
             self.connector_id,
         )
-        measurements = self.handler.get_connector_measurements(
-            self.charge_point_id, self.connector_id
-        )
+        measurements = self.handler.get_connector_measurements(self.charge_point_id, self.connector_id)
         if measurements:
-            self._state = round(
-                sum([phase.current * phase.voltage for phase in measurements]), 0
-            )
-            self._attributes["active_phase"] = " ".join(
-                [i.phase for i in measurements if i.current > 0]
-            )
+            self._state = round(sum([phase.current * phase.voltage for phase in measurements]), 0)
+            self._attributes["active_phase"] = " ".join([i.phase for i in measurements if i.current > 0])
             for measure in measurements:
-                self._attributes[f"{measure.phase.lower()}_power"] = round(
-                    measure.voltage * measure.current, 0
-                )
-                self._attributes[f"{measure.phase.lower()}_current"] = round(
-                    measure.current, 1
-                )
+                self._attributes[f"{measure.phase.lower()}_power"] = round(measure.voltage * measure.current, 0)
+                self._attributes[f"{measure.phase.lower()}_current"] = round(measure.current, 1)
         else:
             self._attributes["active_phase"] = ""
             for phase in range(1, 4):

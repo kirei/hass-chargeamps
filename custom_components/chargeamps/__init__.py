@@ -11,15 +11,6 @@ from typing import Optional
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from chargeamps.base import (
-    ChargePoint,
-    ChargePointConnector,
-    ChargePointConnectorSettings,
-    ChargePointConnectorStatus,
-    ChargePointStatus,
-    StartAuth,
-)
-from chargeamps.external import ChargeAmpsExternalClient
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_PASSWORD,
@@ -31,6 +22,15 @@ from homeassistant.helpers import discovery
 from homeassistant.helpers.entity import DeviceInfo, Entity
 from homeassistant.util import Throttle
 
+from .client import (
+    ChargeAmpsClient,
+    ChargePoint,
+    ChargePointConnector,
+    ChargePointConnectorSettings,
+    ChargePointConnectorStatus,
+    ChargePointStatus,
+    StartAuth,
+)
 from .const import (
     CONF_CHARGEPOINTS,
     CONF_READONLY,
@@ -99,9 +99,7 @@ async def async_setup(hass, config):
     scan_interval = config[DOMAIN].get(CONF_SCAN_INTERVAL)
 
     # Configure the client.
-    client = ChargeAmpsExternalClient(
-        email=username, password=password, api_key=api_key, api_base_url=api_base_url
-    )
+    client = ChargeAmpsClient(email=username, password=password, api_key=api_key, api_base_url=api_base_url)
 
     # check all configured chargepoints or discover
     if charge_point_ids is not None:
@@ -144,9 +142,7 @@ async def async_setup(hass, config):
 
     # Load platforms
     for domain in PLATFORMS:
-        hass.async_create_task(
-            discovery.async_load_platform(hass, domain, DOMAIN, {}, config)
-        )
+        hass.async_create_task(discovery.async_load_platform(hass, domain, DOMAIN, {}, config))
 
     return True
 
@@ -165,9 +161,7 @@ class ChargeampsHandler:
         self.scan_interval = scan_interval
         self.last_scanned = {id: datetime.fromtimestamp(0) for id in charge_point_ids}
         if self.readonly:
-            _LOGGER.warning(
-                "Running in read-only mode, chargepoint will never be updated"
-            )
+            _LOGGER.warning("Running in read-only mode, chargepoint will never be updated")
         _LOGGER.debug("Scan interval %s", self.scan_interval)
         self.update_info = Throttle(self.scan_interval)(self.update_info)
 
@@ -178,9 +172,7 @@ class ChargeampsHandler:
         return res
 
     def get_chargepoint_total_energy(self, charge_point_id) -> float:
-        return self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"].get(
-            charge_point_id
-        )
+        return self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"].get(charge_point_id)
 
     def get_chargepoint_info(self, charge_point_id) -> ChargePoint:
         return self.hass.data[DOMAIN_DATA]["chargepoint_info"].get(charge_point_id)
@@ -208,15 +200,11 @@ class ChargeampsHandler:
             await self.client.set_chargepoint_settings(settings)
         await self.force_update_data(charge_point_id)
 
-    def get_connector_status(
-        self, charge_point_id, connector_id
-    ) -> Optional[ChargePointConnectorStatus]:
+    def get_connector_status(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorStatus]:
         key = (charge_point_id, connector_id)
         return self.hass.data[DOMAIN_DATA]["connector_status"].get(key)
 
-    def get_connector_settings(
-        self, charge_point_id, connector_id
-    ) -> Optional[ChargePointConnectorSettings]:
+    def get_connector_settings(self, charge_point_id, connector_id) -> Optional[ChargePointConnectorSettings]:
         key = (charge_point_id, connector_id)
         return self.hass.data[DOMAIN_DATA]["connector_settings"].get(key)
 
@@ -227,9 +215,7 @@ class ChargeampsHandler:
         return None
 
     async def set_connector_mode(self, charge_point_id, connector_id, mode):
-        settings = await self.client.get_chargepoint_connector_settings(
-            charge_point_id, connector_id
-        )
+        settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.mode = mode
         if self.readonly:
             _LOGGER.info("NOT setting chargepoint connector: %s", settings)
@@ -238,12 +224,8 @@ class ChargeampsHandler:
             await self.client.set_chargepoint_connector_settings(settings)
         await self.force_update_data(charge_point_id)
 
-    async def set_connector_max_current(
-        self, charge_point_id, connector_id, max_current
-    ):
-        settings = await self.client.get_chargepoint_connector_settings(
-            charge_point_id, connector_id
-        )
+    async def set_connector_max_current(self, charge_point_id, connector_id, max_current):
+        settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.max_current = max_current
         if self.readonly:
             _LOGGER.info("NOT setting chargepoint connector: %s", settings)
@@ -253,9 +235,7 @@ class ChargeampsHandler:
         await self.force_update_data(charge_point_id)
 
     async def set_connector_cable_lock(self, charge_point_id, connector_id, cable_lock):
-        settings = await self.client.get_chargepoint_connector_settings(
-            charge_point_id, connector_id
-        )
+        settings = await self.client.get_chargepoint_connector_settings(charge_point_id, connector_id)
         settings.cable_lock = cable_lock
         if self.readonly:
             _LOGGER.info("NOT setting chargepoint connector: %s", settings)
@@ -285,13 +265,8 @@ class ChargeampsHandler:
 
     async def _update_data(self, charge_point_id, force: bool = False):
         """Update data."""
-        if (
-            not force
-            and datetime.now() - self.last_scanned[charge_point_id] < self.scan_interval
-        ):
-            _LOGGER.debug(
-                "Update throttled, last scan at %s", self.last_scanned[charge_point_id]
-            )
+        if not force and datetime.now() - self.last_scanned[charge_point_id] < self.scan_interval:
+            _LOGGER.debug("Update throttled, last scan at %s", self.last_scanned[charge_point_id])
             return
         else:
             _LOGGER.debug("Update passed, forced=%s", force)
@@ -308,32 +283,19 @@ class ChargeampsHandler:
                 )
                 key = (charge_point_id, connector_status.connector_id)
                 self.hass.data[DOMAIN_DATA]["connector_status"][key] = connector_status
-                connector_settings = (
-                    await self.client.get_chargepoint_connector_settings(
-                        charge_point_id, connector_status.connector_id
-                    )
+                connector_settings = await self.client.get_chargepoint_connector_settings(
+                    charge_point_id, connector_status.connector_id
                 )
-                self.hass.data[DOMAIN_DATA]["connector_settings"][key] = (
-                    connector_settings
-                )
-            total_energy = sum(
-                [
-                    v.total_consumption_kwh
-                    for v in await self.client.get_all_chargingsessions(charge_point_id)
-                ]
-            )
+                self.hass.data[DOMAIN_DATA]["connector_settings"][key] = connector_settings
+            total_energy = sum([v.total_consumption_kwh for v in await self.client.get_all_chargingsessions(charge_point_id)])
             _LOGGER.debug(
                 "Total consumption for chargepoint %s: %f",
                 charge_point_id,
                 total_energy,
             )
-            self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"][charge_point_id] = (
-                round(total_energy, 2)
-            )
+            self.hass.data[DOMAIN_DATA]["chargepoint_total_energy"][charge_point_id] = round(total_energy, 2)
             settings = await self.client.get_chargepoint_settings(charge_point_id)
-            self.hass.data[DOMAIN_DATA]["chargepoint_settings"][charge_point_id] = (
-                settings
-            )
+            self.hass.data[DOMAIN_DATA]["chargepoint_settings"][charge_point_id] = settings
         except Exception as error:  # pylint: disable=broad-except
             _LOGGER.error("Could not update data - %s", error)
 
@@ -449,9 +411,7 @@ class ChargeampsEntity(Entity):
     def icon(self):
         """Icon to use in the frontend, if any."""
         if not self.device_class:
-            connector_info = self.handler.get_connector_info(
-                self.charge_point_id, self.connector_id
-            )
+            connector_info = self.handler.get_connector_info(self.charge_point_id, self.connector_id)
             if connector_info:
                 return ICON_MAP.get(connector_info.type, DEFAULT_ICON)
             return DEFAULT_ICON
