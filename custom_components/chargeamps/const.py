@@ -5,7 +5,7 @@ from datetime import timedelta
 # Base component constants
 DOMAIN = "chargeamps"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "1.11.2"
+VERSION = "1.11.3"
 PLATFORMS = ["sensor", "switch", "light"]
 ISSUE_URL = "https://github.com/kirei/hass-chargeamps/issues"
 CONFIGURATION_URL = "https://my.charge.space"
