@@ -11,7 +11,7 @@
 	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues",
 	"requirements": [
 		"homeassistant>=2024.1.0",
-		"pydantic>=2.9.2"
+		"dataclasses-json>=0.5.2"
 	],
 	"version": "1.11.0"
 }
