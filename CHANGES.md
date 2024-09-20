@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.11.0 (2024-09-20)
+
+- Use standalone API client
+
 ## 1.10.0 (2024-09-20)
 
 - Support token refresh
