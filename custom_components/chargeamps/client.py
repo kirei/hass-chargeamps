@@ -192,23 +192,17 @@ class ChargeAmpsClient:
     async def _post(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
-        return await self._session.post(
-            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
-        )
+        return await self._session.post(urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs)
 
     async def _get(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
-        return await self._session.get(
-            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
-        )
+        return await self._session.get(urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs)
 
     async def _put(self, path, **kwargs) -> ClientResponse:
         await self._ensure_token()
         headers = kwargs.pop("headers", self._headers)
-        return await self._session.put(
-            urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs
-        )
+        return await self._session.put(urljoin(self._base_url, path), ssl=self._ssl, headers=headers, **kwargs)
 
     async def get_chargepoints(self) -> list[ChargePoint]:
         """Get all owned chargepoints"""
@@ -231,18 +225,14 @@ class ChargeAmpsClient:
             query_params["startTime"] = start_time.isoformat()
         if end_time:
             query_params["endTime"] = end_time.isoformat()
-        request_uri = (
-            f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
-        )
+        request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions"
         response = await self._get(request_uri, params=query_params)
         res = []
         for session in await response.json():
             res.append(ChargingSession.from_dict(session))
         return res
 
-    async def get_chargingsession(
-        self, charge_point_id: str, session: int
-    ) -> ChargingSession:
+    async def get_chargingsession(self, charge_point_id: str, session: int) -> ChargingSession:
         """Get charging session"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/chargingsessions/{session}"
         response = await self._get(request_uri)
@@ -256,9 +246,7 @@ class ChargeAmpsClient:
         payload = await response.json()
         return ChargePointStatus.from_dict(payload)
 
-    async def get_chargepoint_settings(
-        self, charge_point_id: str
-    ) -> ChargePointSettings:
+    async def get_chargepoint_settings(self, charge_point_id: str) -> ChargePointSettings:
         """Get chargepoint settings"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/settings"
         response = await self._get(request_uri)
@@ -272,18 +260,14 @@ class ChargeAmpsClient:
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/settings"
         await self._put(request_uri, json=payload)
 
-    async def get_chargepoint_connector_settings(
-        self, charge_point_id: str, connector_id: int
-    ) -> ChargePointConnectorSettings:
+    async def get_chargepoint_connector_settings(self, charge_point_id: str, connector_id: int) -> ChargePointConnectorSettings:
         """Get all owned chargepoints"""
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         response = await self._get(request_uri)
         payload = await response.json()
         return ChargePointConnectorSettings.from_dict(payload)
 
-    async def set_chargepoint_connector_settings(
-        self, settings: ChargePointConnectorSettings
-    ) -> None:
+    async def set_chargepoint_connector_settings(self, settings: ChargePointConnectorSettings) -> None:
         """Get all owned chargepoints"""
         payload = settings.to_dict()
         charge_point_id = settings.charge_point_id
@@ -291,9 +275,7 @@ class ChargeAmpsClient:
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/settings"
         await self._put(request_uri, json=payload)
 
-    async def remote_start(
-        self, charge_point_id: str, connector_id: int, start_auth: StartAuth
-    ) -> None:
+    async def remote_start(self, charge_point_id: str, connector_id: int, start_auth: StartAuth) -> None:
         """Remote start chargepoint"""
         payload = start_auth.to_dict()
         request_uri = f"/api/{API_VERSION}/chargepoints/{charge_point_id}/connectors/{connector_id}/remotestart"

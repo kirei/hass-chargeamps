@@ -13,5 +13,5 @@
 		"homeassistant>=2024.1.0",
 		"dataclasses-json>=0.5.2"
 	],
-	"version": "1.11.0"
+	"version": "1.11.1"
 }
