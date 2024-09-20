@@ -1,8 +1,12 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.11.2 (2024-09-20)
+
+- Fix regression with missing file (pydantic removal)
+
 ## 1.11.1 (2024-09-20)
 
-- Add missing files
+- Remove pydantic
 
 ## 1.11.0 (2024-09-20)
 
