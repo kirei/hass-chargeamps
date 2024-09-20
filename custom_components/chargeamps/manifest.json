@@ -5,14 +5,12 @@
 		"@kirei"
 	],
 	"config_flow": false,
-	"dependencies": [
-
-	],
+	"dependencies": [],
 	"documentation": "https://github.com/kirei/hass-chargeamps",
 	"iot_class": "cloud_polling",
 	"issue_tracker": "https://github.com/kirei/hass-chargeamps/issues",
 	"requirements": [
-		"chargeamps==1.6.1",
+		"chargeamps==1.8.0",
 		"dataclasses-json>=0.5.2",
 		"homeassistant>=2022.11.0"
 	],

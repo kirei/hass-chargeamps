@@ -1,5 +1,9 @@
 # Change log for Charge Amps for Home Assistant
 
+## 1.10.0 (2024-09-20)
+
+- Support token refresh
+
 ## 1.9.4 (2024-05-03)
 
 - Update light color modes
