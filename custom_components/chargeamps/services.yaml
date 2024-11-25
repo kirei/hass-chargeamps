@@ -1,33 +1,41 @@
 # Describes the format for available services for Chargeamps charging stations
 
 set_light:
+  name: Set light
   description: Sets the charge point lights.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     dimmer:
+      name: Dimmer
       description: >
         Dimmer settings. Possible values are 'off', 'low', 'medium' or 'high'.
       example: off
     downlight:
+      name: Downlight
       description: >
         Enable/disable downlight.
       example: false
 
 set_max_current:
+  name: Set max current
   description: Sets the maximum current for charging processes.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
     max_current:
+      name: Max current
       description: >
         The maximum current used for the charging process in A. Allowed are
         values between 6 A and 63 A. Invalid values are discarded and the
@@ -35,91 +43,113 @@ set_max_current:
       example: 16
 
 enable:
+  name: Enable charging
   description: >
     Starts a charging process if charging station is authorized.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
 
 disable:
+  name: Disable charging
   description: >
     Stops the charging process if charging station is authorized.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
 
 cable_lock:
+  name: Lock cable
   description: Lock cable.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
 
 cable_unlock:
+  name: Unlock cable
   description: Unlock cable.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
 
 remote_start:
+  name: Remote start
   description: Remote start using RFID.
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
     rfid_length:
+      name: RFID length
       description: >
         The number of bytes the RFID tag used
       example: 4
     rfid_format:
+      name: RFID format
       description: >
         Hex, Dex or ReverseDec
       example: Dec
     rfid:
+      name: RFID tag
       description: >
         The RFID Tag
       example: 111111111
     external_transaction_id:
+      name: External transaction ID
       description: >
         Determines which external transaction (if any) to use
       example: 0
 
 remote_stop:
+  name: Remote stop
   description: Remote stop (Only when RFID lock is turned om)
   fields:
     chargepoint:
+      name: Chargepoint ID
       description: >
         Charge point ID. Default is the first configured or found charge point.
       example: "000000000000"
     connector:
+      name: Connector ID
       description: >
         Connector ID. Default is the first connector.
       example: 1
