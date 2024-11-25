@@ -1,6 +1,7 @@
 # Describes the format for available services for Chargeamps charging stations
 
 set_light:
+  name: Set light
   description: Sets the charge point lights.
   fields:
     chargepoint:
@@ -17,6 +18,7 @@ set_light:
       example: false
 
 set_max_current:
+  name: Set max current
   description: Sets the maximum current for charging processes.
   fields:
     chargepoint:
@@ -35,6 +37,7 @@ set_max_current:
       example: 16
 
 enable:
+  name: Enable charging
   description: >
     Starts a charging process if charging station is authorized.
   fields:
@@ -48,6 +51,7 @@ enable:
       example: 1
 
 disable:
+  name: Disable charging
   description: >
     Stops the charging process if charging station is authorized.
   fields:
@@ -61,6 +65,7 @@ disable:
       example: 1
 
 cable_lock:
+  name: Lock cable
   description: Lock cable.
   fields:
     chargepoint:
@@ -73,6 +78,7 @@ cable_lock:
       example: 1
 
 cable_unlock:
+  name: Unlock cable
   description: Unlock cable.
   fields:
     chargepoint:
@@ -85,6 +91,7 @@ cable_unlock:
       example: 1
 
 remote_start:
+  name: Remote start
   description: Remote start using RFID.
   fields:
     chargepoint:
@@ -113,6 +120,7 @@ remote_start:
       example: 0
 
 remote_stop:
+  name: Remote stop
   description: Remote stop (Only when RFID lock is turned om)
   fields:
     chargepoint:
