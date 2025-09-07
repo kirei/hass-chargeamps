@@ -72,7 +72,7 @@ class ChargePointStatus:
 class ChargePointSettings:
     id: str
     dimmer: str
-    down_light: bool
+    downlight: bool | None = None
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)

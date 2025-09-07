@@ -23,12 +23,14 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         cp_settings = handler.get_chargepoint_settings(cp_id)
         _LOGGER.debug("%s", cp_settings)
         for _type in ("dimmer", "downlight"):
-            lights.append(ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type))
-            _LOGGER.info(
-                "Adding chargepoint %s light %s",
-                cp_id,
-                _type,
-            )
+            val = getattr(cp_settings, _type, None) if cp_settings else None
+            if val is not None:
+                lights.append(ChargeampsLight(hass, f"{cp_info.name}_{cp_id}_{_type}", cp_id, _type))
+                _LOGGER.info(
+                    "Adding chargepoint %s light %s",
+                    cp_id,
+                    _type,
+                )
     async_add_entities(lights, True)
 
 
@@ -57,12 +59,12 @@ class ChargeampsLight(LightEntity, ChargeampsEntity):
     def is_on(self):
         settings = self.handler.get_chargepoint_settings(self.charge_point_id)
         if self._light_type == "downlight":
-            status = settings.down_light
+            status = settings.downlight
         elif self._light_type == "dimmer":
             status = settings.dimmer
         else:
             return None
-        return status not in (False, "Off")
+        return status not in (False, None, "Off")
 
     async def async_turn_on(self, brightness=None):
         if brightness:
