@@ -192,7 +192,7 @@ class ChargeampsHandler:
         if dimmer is not None:
             settings.dimmer = dimmer.capitalize()
         if downlight is not None:
-            settings.down_light = downlight
+            settings.downlight = downlight
         if self.readonly:
             _LOGGER.info("NOT setting chargepoint: %s", settings)
         else:
